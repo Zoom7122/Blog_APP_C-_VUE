@@ -1,18 +1,18 @@
 <template>
-  <div class="article-create-container">
+  <div class="article-create-container" @submit.prevent="SendArticle">
     <div class="header">
       <h1>Новая статья</h1>
       <p>Заполните все поля для публикации статьи</p>
     </div>
 
-    <form class="article-form" @submit.prevent="handleSubmit">
+    <form class="article-form">
       <!-- Заголовок -->
       <div class="form-group">
         <label for="title">Заголовок статьи *</label>
         <input
           type="text"
           id="title"
-          v-model="article.title"
+          v-model="article.Title"
           placeholder="Введите заголовок..."
           required
           class="form-input"
@@ -25,7 +25,7 @@
         <input
           type="text"
           id="slug"
-          v-model="article.slug"
+          v-model="article.CoverImage"
           placeholder="nazvanie-stati"
           class="form-input"
         />
@@ -37,7 +37,7 @@
         <label for="excerpt">Краткое описание *</label>
         <textarea
           id="excerpt"
-          v-model="article.excerpt"
+          v-model="article.description"
           placeholder="Краткое описание статьи (будет показано в списках)"
           rows="3"
           required
@@ -50,7 +50,7 @@
         <label for="content">Текст статьи *</label>
         <textarea
           id="content"
-          v-model="article.content"
+          v-model="article.text"
           placeholder="Начните писать вашу статью здесь..."
           rows="10"
           required
@@ -67,7 +67,7 @@
             <div class="meta-input-group">
               <input
                 type="number"
-                v-model="article.read_time"
+                v-model="article.ReadTime"
                 min="1"
                 class="meta-input"
                 placeholder="5"
@@ -77,6 +77,12 @@
           </div>
         </div>
       </div>
+
+      <div v-if="errorApi!=''" class="error-box">
+      <strong>Ошибка:</strong> {{ errorApi }}
+     </div>
+
+     <p v-if="successSendData == true">Успешно</p>
 
       <!-- Кнопки действий -->
       <div class="form-actions">
@@ -89,28 +95,24 @@
 </template>
 
 <script>
+import api from '@/axios-config';
+
 export default {
   name: 'ArticleCreate',
   data() {
     return {
       article: {
-        title: '',
-        content: '',
-        excerpt: '',
-        slug: '',
-        cover_image: '',
-        status: 'draft',
-        views: 0,
-        read_time: 5,
-        published_at: ''
-      }
+        Title: '',
+        CoverImage: '',
+        description: '',
+        text: '',
+        ReadTime: 0
+      },
+        errorApi: false,
+        successSendData: false
     }
   },
   methods: {
-    handleSubmit() {
-      console.log('Создание статьи:', this.article)
-      // Здесь будет логика отправки на сервер
-    },
     handleSaveDraft() {
       this.article.status = 'draft'
       console.log('Сохранение черновика:', this.article)
@@ -119,6 +121,26 @@ export default {
     handleImageError(event) {
       event.target.style.display = 'none'
       console.log('Ошибка загрузки изображения')
+    },
+    async SendArticle() {
+      this.errorApi = '';
+
+       console.log('Отправляю данные на C# API:', this.article)
+      try{
+      const response = await api.post('/ArticleConrtroller/CreateArticle', this.article);
+
+      if(response.data.success == true){
+        this.successSendData = true
+      }
+      else {
+        this.errorApi = "Ошибка: сервер вернул false";
+      }
+    }
+    catch(err)
+    {
+      const mes = err.response?.data?.messegeError || err.message;
+      this.errorApi = "Ошибка отправки: " + mes;
+    }
     }
   },
   mounted() {

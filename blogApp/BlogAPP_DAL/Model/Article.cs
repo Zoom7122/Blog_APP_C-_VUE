@@ -30,6 +30,8 @@ namespace blogApp_DAL.Model
 
         public string Author_Name { get; set; }
 
+        public string Some { get; set; }
+
         // views (INTEGER, Default: 0)
         public int Views { get; set; } = 0;
 

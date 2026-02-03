@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const instance = axios.create({
     baseURL: 'https://localhost:7284/api',
-    withCredentials: true, // ВАЖНО: отправляем куки с каждым запросом
+    withCredentials: true, 
     headers: {
         'Content-Type': 'application/json'
     }
