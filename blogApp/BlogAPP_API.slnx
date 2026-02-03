@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="BlogAPP_API/BlogAPP_API.csproj" />
+  <Project Path="BlogAPP_BLL/BlogAPP_BLL.csproj" />
+  <Project Path="BlogAPP_Core/BlogAPP_Core.csproj" Id="00887fd0-26aa-4547-bbe1-dd1244e256a7" />
+  <Project Path="BlogAPP_DAL/BlogAPP_DAL.csproj" />
+  <Project Path="blogApp_TEST_DAL/blogApp_TEST_DAL.csproj" />
+</Solution>
