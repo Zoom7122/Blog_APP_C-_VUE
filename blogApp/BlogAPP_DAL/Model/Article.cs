@@ -30,19 +30,13 @@ namespace blogApp_DAL.Model
 
         public string Author_Name { get; set; }
 
-        public string Some { get; set; }
+        public string Author_Email { get; set; }
 
         // views (INTEGER, Default: 0)
         public int Views { get; set; } = 0;
 
         // read_time (INTEGER, Nullable)
         public int? ReadTime { get; set; } // Nullable int в C# для Nullable INTEGER в БД
-
-        // created_at (DATETIME, Default: CURRENT_TIMESTAMP)
-        public DateTime? CreatedAt { get; set; }
-
-        // updated_at (DATETIME, Default: CURRENT_TIMESTAMP)
-        public DateTime? UpdatedAt { get; set; }
 
         // published_at (DATETIME, Nullable)
         public DateTime? PublishedAt { get; set; }

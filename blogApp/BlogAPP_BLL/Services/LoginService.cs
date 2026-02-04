@@ -13,11 +13,13 @@ namespace BlogAPP_BLL.Services
     {
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
+        private readonly IArticleService _articleService;
 
-        public LoginService(IUserRepo userRepo, IMapper mapper)
+        public LoginService(IUserRepo userRepo, IMapper mapper, IArticleService articleService)
         {
             _userRepo = userRepo;
             _mapper = mapper;
+            _articleService = articleService;
         }
 
         public async Task<UserEnrance> Login(LoginDate data)

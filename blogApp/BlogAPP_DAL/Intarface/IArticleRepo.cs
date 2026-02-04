@@ -17,6 +17,6 @@ namespace BlogAPP_DAL.Intarface
 
         void CreateArticleinDbAsync(Article article);
 
-        int GetCountArticleInDbPostByUser(string name);
+        Task<int> GetCountArticleInDbPostByUserAsync(string email);
     }
 }

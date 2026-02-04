@@ -91,7 +91,7 @@ export default {
             const response = await api.post('/EntranceConroller/Login', dataToSend);
             
             if (response.data && response.data.success === true) {
-                // ✅ Успешный вход
+
                 this.$emit('success', response.data.user);
                 
                 localStorage.setItem('user', JSON.stringify(response.data.user));

@@ -20,11 +20,10 @@
         <h2>{{ user.name }}</h2>
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Роль:</strong> {{ user.role }}</p>
-        <p v-if="user.bio"><strong>О себе:</strong> {{ user.bio }}</p>
         
         <div class="user-stats">
           <div class="stat">
-            <span class="stat-number">0</span>
+            <span class="stat-number">{{user.countPost}}</span>
             <span class="stat-label">Статей</span>
           </div>
           <div class="stat">
@@ -71,7 +70,8 @@ export default {
         email: '',
         avatar_url: '',
         bio: '',
-        role: ''
+        role: '',
+        countPost : 0
       })
     }
   },

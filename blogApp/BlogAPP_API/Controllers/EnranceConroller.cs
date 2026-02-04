@@ -16,10 +16,12 @@ namespace BlogAPP_API.Controllers
     public class EntranceConroller : ControllerBase
     {
         private readonly ILoginService _logService;
+        private readonly IArticleService _articleService;
 
-        public EntranceConroller(ILoginService logService) 
+        public EntranceConroller(ILoginService logService, IArticleService articleService) 
         {
             _logService = logService;
+            _articleService = articleService;
         }
 
         [HttpPost]
@@ -57,7 +59,7 @@ namespace BlogAPP_API.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-
+            user.CountPost = await _articleService.CountArticleWroteByUserAsync(user.Email);
 
             return Ok(new { success = true , user });
         }

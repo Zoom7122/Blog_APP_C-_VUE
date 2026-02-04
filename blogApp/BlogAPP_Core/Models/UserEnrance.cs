@@ -16,5 +16,7 @@ namespace BlogAPP_Core.Models
         public string Bio { get; set; }
 
         public string Role { get; set; }
+
+        public int CountPost { get; set; }
     }
 }

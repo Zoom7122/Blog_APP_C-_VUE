@@ -49,9 +49,10 @@ namespace BlogAPP_DAL.Repository
             return await _context.Articles.ToListAsync();
         }
 
-        public int GetCountArticleInDbPostByUser(string name)
+        public async Task<int> GetCountArticleInDbPostByUserAsync(string email)
         {
-            return _context.Articles.Count();
+            return await _context.Articles.CountAsync(x => x.Author_Email == email);
         }
+
     }
 }

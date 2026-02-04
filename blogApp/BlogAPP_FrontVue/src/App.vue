@@ -38,8 +38,7 @@
         Регистрация
       </button>
     </nav>
-    
-    <!-- Информация о подключении -->
+
     <InfAboutConnecting v-if="!isLoggedIn" />
   </div>
 </template>
@@ -66,7 +65,7 @@ export default {
     Login,
     Registration,
     Dashboard,
-    InfAboutConnecting,
+    InfAboutConnecting
   },
   data() {
     return {
@@ -95,9 +94,12 @@ export default {
     async checkAuth() {
       try {
         const response = await api.get('/EntranceConroller/CheckAuth');
+
+        console.log('Ответ checkAuth:', response.data);
+        
         if (response.data.success) {
           this.isLoggedIn = true;
-          this.userData = response.data.user;
+          this.userData = response.data.user || response.data;
           localStorage.setItem('user', JSON.stringify(response.data.user));
         }
       } catch (error) {

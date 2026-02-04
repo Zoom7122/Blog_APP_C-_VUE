@@ -1,13 +1,15 @@
 ﻿using BlogAPP_BLL.Intarface;
+using BlogAPP_BLL.Models;
 using BlogAPP_Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime;
+using System.Security.Claims;
 
 namespace BlogAPP_API.Controllers
 {
-    //[Authorize]
-    [AllowAnonymous]
+    [Authorize]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     public class ArticleConrtroller : ControllerBase
     {
@@ -23,7 +25,22 @@ namespace BlogAPP_API.Controllers
         {
             try
             {
-                var result = await _articleService.CreateArticle(model);
+                var allClimes  = User.Claims.ToList();
+
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
+                var name = User.FindFirst(ClaimTypes.Name)?.Value;
+                var role = User.FindFirst("Role")?.Value;
+                var avatar = User.FindFirst("Avatar")?.Value;
+
+                UserCookie userCookie = new UserCookie()
+                {
+                    Email = email,
+                    Name = name,
+                    Role = role,
+                    Avatar = avatar
+                };
+
+                var result = await _articleService.CreateArticle(model, userCookie);
 
                 if (result)
                 {
