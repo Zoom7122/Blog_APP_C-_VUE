@@ -21,16 +21,16 @@ namespace blogApp_DAL.Model
         public string Text { get; set; }
 
         // excerpt (TEXT, Nullable)
-        public string Tag { get; set; }
+        public string? Tag { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // cover_image (TEXT, Nullable)
-        public string Cover_image { get; set; }
+        public string? Cover_image { get; set; }
 
         public string Author_Name { get; set; }
 
-        public string Author_Email { get; set; }
+        public string? Author_Email { get; set; }
 
         // views (INTEGER, Default: 0)
         public int Views { get; set; } = 0;

@@ -13,5 +13,11 @@ namespace BlogAPP_BLL.Intarface
 
         Task<int> CountArticleWroteByUserAsync(string email);
 
+
+        Task<List<ArticleReturnInAPI>> FindArticleByTitile(string title);
+
+        Task<List<ArticleReturnInAPI>> FindArticleByProperties(ArticlePropertiesFind properties);
+
+
     }
 }

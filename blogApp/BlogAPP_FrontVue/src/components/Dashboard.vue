@@ -1,5 +1,5 @@
 <template>
- <div class="dashboard" v-show="!showArticleForm">
+ <div class="dashboard" v-show="!showArticleForm && !showArticleView">
     <!-- Шапка Dashboard -->
     <div class="dashboard-header">
       <h1>Добро пожаловать в Dashboard!</h1>
@@ -45,20 +45,25 @@
       </div>
     </div>
     <div class="dashboard-content">
+
       <h3>Ваши возможности:</h3>
       <button @click="showArticleForm = true" class="add-article-btn">📝 Добавить статью</button>
+      <button @click="showArticleView = true" class="add-article-btn">Найти статью</button>
     </div>
   </div>
-  
+
+
+<ArticleView v-show="showArticleView"></ArticleView>
 <ArticleAdd v-show="showArticleForm"></ArticleAdd>
 
 </template>
 
 <script>
 import ArticleAdd from './ArticleAdd.vue';
+import ArticleView from './ArticleView.vue';
 
 export default {
-  components: { ArticleAdd},
+  components: { ArticleAdd, ArticleView},
   name: 'Dashboard',
   props: {
     // Принимаем user из App.vue
@@ -78,6 +83,7 @@ export default {
   data() {
     return {
       showArticleForm: false,
+      showArticleView: false,
       features: [
         { id: 1, title: 'Создание статей', description: 'Пишите и публикуйте свои статьи' },
         { id: 2, title: 'Комментирование', description: 'Комментируйте статьи других пользователей' },

@@ -1,4 +1,5 @@
-﻿using blogApp_DAL;
+﻿using BlogAPP_Core.Models;
+using blogApp_DAL;
 using blogApp_DAL.Model;
 using BlogAPP_DAL.Intarface;
 using Microsoft.EntityFrameworkCore;
@@ -44,9 +45,14 @@ namespace BlogAPP_DAL.Repository
             return await _context.Articles.Where(x => x.Tag == tag).ToListAsync();
         }
 
-        public async Task<List<Article>> GetArticlesAsync()
+        public async Task<List<Article>> GetAllArticlesAsync()
         {
             return await _context.Articles.ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticlesByEmailAthorAsync(string emailAthor)
+        {
+            return await _context.Articles.Where(x => x.Author_Email == emailAthor).ToListAsync();
         }
 
         public async Task<int> GetCountArticleInDbPostByUserAsync(string email)
@@ -54,5 +60,16 @@ namespace BlogAPP_DAL.Repository
             return await _context.Articles.CountAsync(x => x.Author_Email == email);
         }
 
+        public async Task<List<Article>> GetArticleByTitileAsync(string titile)
+        {
+            return await _context.Articles.Where(x => x.Title == titile).ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticleByTitileANDTagAsync(
+            ArticlePropertiesFind propertiesFind)
+        {
+            return await _context.Articles.Where(x =>x.Title == propertiesFind.Title &&
+            x.Tag == propertiesFind.Tag).ToListAsync();
+        }
     }
 }

@@ -28,6 +28,21 @@ namespace BlogAPP_BLL.Services
             return await _articleRepo.GetCountArticleInDbPostByUserAsync(email);
         }
 
+        public async Task<List<ArticleReturnInAPI>> FindArticleByTitile(string title)
+        {
+            var listArticle = await _articleRepo.GetArticleByTitileAsync(title);
+
+            List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
+
+            for (int i = 0; i < listArticle.Count; i++)
+            {
+                var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
+                listArticleToApi.Add(article);
+            }
+
+            return listArticleToApi;
+        }
+
         public async Task<bool> CreateArticle(CreateArticleModel model, UserCookie userCooki)
         {
             if (model.Title == null)
@@ -58,5 +73,62 @@ namespace BlogAPP_BLL.Services
             return true;
         }
 
+        public async Task<List<ArticleReturnInAPI>> FindArticleByProperties(
+            ArticlePropertiesFind properties)
+        {
+            if (properties == null)
+                return null;
+
+            if(properties.Title == null && properties.Tag != null)
+            {
+                var listArticle = await _articleRepo.GetArticleByTagAsync(properties.Tag);
+
+                if (listArticle == null) return null;
+
+                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
+
+                for (int i = 0; i < listArticle.Count; i++)
+                {
+                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
+                    listArticleToApi.Add(article);
+                }
+
+                return listArticleToApi;
+            }
+            else if (properties.Title != null && properties.Tag == null)
+            {
+                var listArticle = await _articleRepo.GetArticleByTitileAsync(properties.Title);
+
+                if (listArticle == null) return null;
+
+                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
+
+                for (int i = 0; i < listArticle.Count; i++)
+                {
+                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
+                    listArticleToApi.Add(article);
+                }
+
+                return listArticleToApi;
+            }
+            else if (properties.Title != null && properties.Tag != null)
+            {
+                var listArticle = await _articleRepo.GetArticleByTitileANDTagAsync(properties);
+
+                if (listArticle == null) return null;
+
+                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
+
+                for (int i = 0; i < listArticle.Count; i++)
+                {
+                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
+                    listArticleToApi.Add(article);
+                }
+
+                return listArticleToApi;
+            }
+
+            return null;
+        }
     }
 }

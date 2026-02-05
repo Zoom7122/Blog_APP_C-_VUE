@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace BlogAPP_BLL.Models
+{
+    public class ArticleReturnInAPI
+    {
+
+        public string Titile { get; set; }
+
+        public string Text { get; set; }
+
+        public string Tag { get; set; }
+
+        public string Description { get; set; }
+
+        public string Cover_image { get; set; }
+
+        public string Author_Name { get; set; }
+
+        public string Author_Email { get; set; }
+
+        public int? ReadTime { get; set; } 
+
+        public DateTime? PublishedAt { get; set; }
+
+    }
+}

@@ -1,4 +1,5 @@
-﻿using blogApp_DAL.Model;
+﻿using BlogAPP_Core.Models;
+using blogApp_DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,16 +8,22 @@ namespace BlogAPP_DAL.Intarface
 {
     public interface IArticleRepo
     {
-        Task<List<Article>> GetArticlesAsync();
+        Task<List<Article>> GetAllArticlesAsync();
 
         Task<Article> GetArticleByIdAsync(string id);
-
-        Task<List<Article>> GetArticleByTagAsync(string tag);
 
         Task<List<Article>> GetAllArticleByNameAuthor(string name);
 
         void CreateArticleinDbAsync(Article article);
 
+        Task<List<Article>> GetArticlesByEmailAthorAsync(string emailAthor);
+
         Task<int> GetCountArticleInDbPostByUserAsync(string email);
+
+        Task<List<Article>> GetArticleByTitileANDTagAsync(ArticlePropertiesFind propertiesFind);
+
+        Task<List<Article>> GetArticleByTitileAsync(string titile);
+
+        Task<List<Article>> GetArticleByTagAsync(string tag);
     }
 }

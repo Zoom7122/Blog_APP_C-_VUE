@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BlogAPP_BLL.Models;
 using BlogAPP_Core.Models;
 using blogApp_DAL.Model;
 using System;
@@ -49,6 +50,8 @@ namespace BlogAPP_BLL.Mappings
             CreateMap<CreateArticleModel, Article>()
                 .ForMember(dest => dest.Id,
                 opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
+
+            CreateMap<Article, ArticleReturnInAPI>();
         }
 
     }
