@@ -7,7 +7,7 @@ namespace BlogAPP_BLL.Models
     public class ArticleReturnInAPI
     {
 
-        public string Titile { get; set; }
+        public string Title { get; set; }
 
         public string Text { get; set; }
 

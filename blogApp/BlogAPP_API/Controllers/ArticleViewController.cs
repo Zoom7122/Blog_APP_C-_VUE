@@ -1,4 +1,5 @@
 ﻿using BlogAPP_BLL.Intarface;
+using BlogAPP_BLL.Models;
 using BlogAPP_Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace BlogAPP_API.Controllers
         {
             try
             {
-                var list = await _articleService.FindArticleByProperties(propertiesFind);
+                List<ArticleReturnInAPI> list = await _articleService.FindArticleByProperties(propertiesFind);
 
                 if (list == null || list.Count <=0)
                     return Ok(new { success = false, messegeEror = "Статьи не найдены" });
