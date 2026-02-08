@@ -8,6 +8,8 @@ namespace BlogAPP_Core.Models
     {
         public string Title { get; set; }
 
+        public string Tag { get; set; }
+
         public string CoverImage { get; set; }
 
         public string description { get; set; }
@@ -16,6 +18,5 @@ namespace BlogAPP_Core.Models
 
         public int ReadTime { get; set; }
 
-        //public List<string> tags { get; set; }
     }
 }

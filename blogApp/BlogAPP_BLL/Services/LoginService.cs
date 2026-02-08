@@ -6,6 +6,7 @@ using blogApp_DAL.Intarface;
 using blogApp_DAL.Model;
 using System;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlogAPP_BLL.Services
 {
@@ -40,6 +41,11 @@ namespace BlogAPP_BLL.Services
             infoUser.CountPost = countPost;
 
             return infoUser;
+        }
+
+        public async Task<User> FindUserByEmail(string email)
+        {
+           return await _userRepo.FindUserByEmail(email);
         }
 
         public async Task<bool> Register(CreateUserDto data)

@@ -41,6 +41,9 @@ builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepo, ArticleRepo>();
+builder.Services.AddScoped<ICommentsRepo, CommentsRepo>();
+builder.Services.AddScoped<ICommentsService, CommentsService>();
+
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 

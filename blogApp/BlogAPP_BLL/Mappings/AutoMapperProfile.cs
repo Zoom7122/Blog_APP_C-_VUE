@@ -52,6 +52,11 @@ namespace BlogAPP_BLL.Mappings
                 opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
 
             CreateMap<Article, ArticleReturnInAPI>();
+
+
+            CreateMap<CommentModelsCreate, Comment>()
+                .ForMember(dest => dest.Id,
+                opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
         }
 
     }

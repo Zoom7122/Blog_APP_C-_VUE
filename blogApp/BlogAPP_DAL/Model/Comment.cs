@@ -25,14 +25,8 @@ namespace blogApp_DAL.Model
         [Required]
         public string UserId { get; set; }
 
-        // is_approved (BOOLEAN, Default: 1)
-        public bool IsApproved { get; set; } = true; // Устанавливаем дефолт на уровне C#
-
         // created_at (DATETIME, Default: CURRENT_TIMESTAMP)
         public DateTime? CreatedAt { get; set; }
-
-        // updated_at (DATETIME, Default: CURRENT_TIMESTAMP)
-        public DateTime? UpdatedAt { get; set; }
 
         public virtual User User { get; set; }
 

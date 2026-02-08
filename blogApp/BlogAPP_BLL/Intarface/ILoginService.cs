@@ -1,4 +1,5 @@
 ﻿using BlogAPP_Core.Models;
+using blogApp_DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +11,7 @@ namespace BlogAPP_BLL.Intarface
         Task<UserEnrance> Login(LoginDate data);
 
         Task<bool> Register(CreateUserDto data);
+
+        Task<User> FindUserByEmail(string email);
     }
 }

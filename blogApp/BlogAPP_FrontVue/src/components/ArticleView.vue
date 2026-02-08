@@ -38,10 +38,9 @@
         
         <div class="article-footer">
           <span class="email" v-if="article.Author_Email">Email автора: {{ article.Author_Email }}</span>
-          <div v-if="article.Cover_image" class="cover-image">
-            <img :src="article.Cover_image" alt="Обложка статьи" />
-          </div>
         </div>
+
+        <AddComment :articleId="article.Id"></AddComment>
         
         <hr v-if="index < ArticleList.length - 1">
       </div>
@@ -56,9 +55,11 @@
 
 
 <script>
+import AddComment from './AddComment.vue';
 import api from '@/axios-config';
 
 export default {
+  components:{AddComment},
   data() {
     return {
       ArticleList: [],
@@ -102,7 +103,8 @@ export default {
 
           this.ArticleList = response.data.list.map(item => {
             const article = {
-               Title: item.title || '',
+                Id: item.id || '',
+                Title: item.title || '',
                 Text: item.text || '',
                 Tag: item.tag || '',
                 Description: item.description || '',
