@@ -1,6 +1,7 @@
 ﻿using blogApp_DAL;
 using blogApp_DAL.Model;
 using BlogAPP_DAL.Intarface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -25,6 +26,11 @@ namespace BlogAPP_DAL.Repository
                 await _context.Comments.AddAsync(comment);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> FindCountCommetsWroteByUser(string userId)
+        {
+            return await _context.Comments.CountAsync(x => x.UserId == userId);
         }
     }
 }

@@ -8,5 +8,8 @@ namespace BlogAPP_BLL.Intarface
     public interface ICommentsService
     {
         Task<bool> CreateComments(CommentModelsCreate modelsCreate);
+
+        Task<int> GetCountCommentsWroteByUser(string userId);
+
     }
 }

@@ -43,5 +43,10 @@ namespace BlogAPP_BLL.Services
 
             return true;
         }
+
+        public async Task<int> GetCountCommentsWroteByUser(string userId)
+        {
+            return await _commentsRepo.FindCountCommetsWroteByUser(userId);
+        }
     }
 }

@@ -48,5 +48,28 @@ namespace BlogAPP_API.Controllers
 
         }
 
+        [HttpGet]
+        [Route("GetCountComments")]
+        public async Task<IActionResult> GetCountComments()
+        {
+            try
+            {
+                int countCommets = 0;
+
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                var user = await _loginService.FindUserByEmail(userEmail);
+
+                countCommets = await _commentsService.GetCountCommentsWroteByUser(user.Id);
+
+                if (countCommets > 0)
+                    return Ok(new { countCommets });
+                else return Ok(new { countCommets , errorMessege ="У вас нет комментариев"});
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { countCommets = 0 ,errorMessege = $"Произошла ошибка: {ex.Message}" });
+            }
+        }
     }
 }

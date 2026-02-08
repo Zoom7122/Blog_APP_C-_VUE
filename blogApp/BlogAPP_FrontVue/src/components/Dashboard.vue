@@ -27,7 +27,7 @@
             <span class="stat-label">Статей</span>
           </div>
           <div class="stat">
-            <span class="stat-number">0</span>
+            <span class="stat-number">{{ user.CountCommetsUser }}</span>
             <span class="stat-label">Комментариев</span>
           </div>
         </div>
@@ -63,6 +63,7 @@
 <script>
 import ArticleAdd from './ArticleAdd.vue';
 import ArticleView from './ArticleView.vue';
+import api from '@/axios-config';
 
 export default {
   components: { ArticleAdd, ArticleView},
@@ -78,7 +79,8 @@ export default {
         avatar_url: '',
         bio: '',
         role: '',
-        countPost : 0
+        countPost : 0,
+        CountCommetsUser: 0,
       })
     }
   },
@@ -101,10 +103,29 @@ export default {
             console.error('Ошибка при выходе:', error);
         }
         this.$emit('logout');
+    },
+
+    async GetCountComments(){
+
+      try{
+        const response = await api.get('/Commets/GetCountComments')
+
+        if(response.data.countCommets >0){
+          this.user.CountCommetsUser = response.data.countCommets
+        }
+        else{
+          console.log(response.data.errorMessege)
+        }
+
+      }
+      catch(error) {
+
+      }
     }
   },
   mounted() {
     console.log('Dashboard получил пользователя:', this.user);
+    this.GetCountComments();
   }
 }
 </script>

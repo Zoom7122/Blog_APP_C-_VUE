@@ -1,5 +1,5 @@
 <template>
-  <div class="article-create-container" @submit.prevent="SendArticle">
+  <div class="article-create-container">
     <div class="header">
       <h1>Новая статья</h1>
       <p>Заполните все поля для публикации статьи</p>
@@ -9,7 +9,7 @@
     </div>
 
 
-    <form class="article-form">
+    <form class="article-form"  @submit.prevent="SendArticle">
       <!-- Заголовок -->
       <div class="form-group">
         <label for="title">Заголовок статьи *</label>
@@ -88,9 +88,9 @@
 
       <!-- Кнопки действий -->
       <div class="form-actions">
-        <buttonsubmit type="submit" class="btn btn-primary">
-            Сохранить
-        </buttonsubmit>
+      <button type="submit" class="btn btn-primary">
+          Сохранить
+      </button>
       </div>
     </form>
   </div>
@@ -121,7 +121,6 @@ export default {
     handleSaveDraft() {
       this.article.status = 'draft'
       console.log('Сохранение черновика:', this.article)
-      // Логика сохранения черновика
     },
     handleImageError(event) {
       event.target.style.display = 'none'
@@ -129,7 +128,10 @@ export default {
     },
     async SendArticle() {
       this.errorApi = '';
-
+      
+        console.log('1. Начинаю отправку...');
+        console.log('2. Данные для отправки:', JSON.stringify(this.article));
+       
        console.log('Отправляю данные на C# API:', this.article)
       try{
       const response = await api.post('/ArticleConrtroller/CreateArticle', this.article);

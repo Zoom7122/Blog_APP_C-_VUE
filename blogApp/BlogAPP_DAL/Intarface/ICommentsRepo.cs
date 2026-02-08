@@ -10,5 +10,7 @@ namespace BlogAPP_DAL.Intarface
 
         Task AddCommetsToArticle(Comment comment);
 
+
+        Task<int> FindCountCommetsWroteByUser(string userId);
     }
 }
