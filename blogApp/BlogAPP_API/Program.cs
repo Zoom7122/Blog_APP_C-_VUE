@@ -43,6 +43,8 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IArticleRepo, ArticleRepo>();
 builder.Services.AddScoped<ICommentsRepo, CommentsRepo>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
+builder.Services.AddScoped<ITagRepo, TagRepo>();
+
 
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
