@@ -114,6 +114,7 @@ export default {
           this.user.CountCommetsUser = response.data.countCommets
         }
         else{
+          this.user.CountCommetsUser =0
           console.log(response.data.errorMessege)
         }
 

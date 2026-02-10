@@ -36,7 +36,6 @@ namespace BlogAPP_DAL.Repository
         public async Task<List<Tag>> FindTagByName(string name)
         {
             return await _context.Tags.Where(x => x.Name == name).ToListAsync();
-
         }
 
     }
