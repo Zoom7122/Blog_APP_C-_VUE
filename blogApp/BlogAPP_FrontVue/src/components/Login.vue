@@ -64,8 +64,8 @@ export default {
   name: 'App',
   data() {
     return {
-      email: 'ivan@example.com',
-      password: '2313213',
+      email: 'testov@example.com',
+      password: '12345678',
       ApiResponce: null,
       error: null,
       loading: false,

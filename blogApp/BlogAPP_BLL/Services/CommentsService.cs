@@ -31,20 +31,34 @@ namespace BlogAPP_BLL.Services
             List<CommentsViewModel> commentsToPush = new List<CommentsViewModel>();
 
 
-            var user = await _userRepo.FindUserByEmail(article.Author_Email);
-
-            if (user == null)
-                throw new UserNotFoundException();
-
             var comments = await _commentsRepo.FindCommentsArticle(article.Id);
 
             for (int i = 0; i < comments.Count; i++)
             {
+                var user = await _userRepo.FindUserById(comments[i].UserId);
+                if (user == null)
+                    throw new UserNotFoundException();
+
                 commentsToPush.Add(_mapper.Map<CommentsViewModel>(comments[i]));
                 commentsToPush[i].UserName = user.FirstName;
             }
 
             return commentsToPush;
+
+            //var user = await _userRepo.FindUserByEmail(article.Author_Email);
+
+            //if (user == null)
+            //    throw new UserNotFoundException();
+
+            //var comments = await _commentsRepo.FindCommentsArticle(article.Id);
+
+            //for (int i = 0; i < comments.Count; i++)
+            //{
+            //    commentsToPush.Add(_mapper.Map<CommentsViewModel>(comments[i]));
+            //    commentsToPush[i].UserName = user.FirstName;
+            //}
+
+            //return commentsToPush;
         }
 
         public async Task<bool> CreateComments(CommentModelsCreate modelsCreate)

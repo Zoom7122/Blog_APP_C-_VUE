@@ -1,5 +1,6 @@
 using BlogAPP_BLL.Intarface;
 using BlogAPP_BLL.Mappings;
+using BlogAPP_BLL.Models;
 using BlogAPP_BLL.Services;
 using BlogAPP_Core;
 using blogApp_DAL;
@@ -46,7 +47,7 @@ builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<ITagRepo, TagRepo>();
 builder.Services.AddScoped<IArticle_TagRepo, Article_TagRepo>();
 builder.Services.AddScoped<ITagService, TagService>();
-
+builder.Services.AddScoped<IPasswordService, PasswordService>();
 
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));

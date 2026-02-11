@@ -51,10 +51,9 @@ import Registration from './components/RegisterPage.vue';
 import Dashboard from './components/Dashboard.vue';
 import InfAboutConnecting from './components/InfAboutConnecting.vue';
 
-// Создаем экземпляр axios с настройками
 const api = axios.create({
   baseURL: 'https://localhost:7284/api',
-  withCredentials: true, // Важно для кук
+  withCredentials: true, 
   headers: {
     'Content-Type': 'application/json'
   }

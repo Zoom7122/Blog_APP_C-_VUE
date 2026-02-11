@@ -24,8 +24,8 @@ namespace blogApp_DAL.Repository
             if (user == null)
                 return false;
 
-            if(user.Password != password)
-                return false;
+            //if(user.Password != password)
+            //    return false;
 
             return true;
         }

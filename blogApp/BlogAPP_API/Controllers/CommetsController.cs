@@ -60,7 +60,7 @@ namespace BlogAPP_API.Controllers
                 var user = await _loginService.FindUserByEmail(userEmail);
 
                 countCommets = await _commentsService.GetCountCommentsWroteByUser(user.Id);
-
+                if (countCommets == null)  return Ok(new { countCommets = 0, errorMessege = "У вас нет комментариев" });
                 if (countCommets > 0)
                     return Ok(new { countCommets });
                 else return Ok(new { countCommets , errorMessege ="У вас нет комментариев"});

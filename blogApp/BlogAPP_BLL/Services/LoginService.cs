@@ -15,24 +15,26 @@ namespace BlogAPP_BLL.Services
         private readonly IUserRepo _userRepo;
         private readonly IMapper _mapper;
         private readonly IArticleService _articleServic;
+        private readonly IPasswordService _passwordService;
 
-        public LoginService(IUserRepo userRepo, IMapper mapper, IArticleService articleService)
+        public LoginService(IUserRepo userRepo, IMapper mapper, IArticleService articleService,
+            IPasswordService passwordService)
         {
             _userRepo = userRepo;
             _mapper = mapper;
             _articleServic = articleService;
+            _passwordService = passwordService;
         }
 
         public async Task<UserEnrance> Login(LoginDate data)
         {
-            var result = await _userRepo.CanLoginInAccount(data.Email, data.Password);
-
-            if (!result)
-            {
-                return null;
-            }
 
             var user = await _userRepo.FindUserByEmail(data.Email);
+
+            if (user == null || !_passwordService.VerifyPassword(data.Password, user.Password))
+            {
+                throw new Exception("Не правильный пароль");
+            }
 
             var infoUser = _mapper.Map<UserEnrance>(user);
 
@@ -69,6 +71,9 @@ namespace BlogAPP_BLL.Services
             {
                 user.Role = "User";
             }
+
+            var passwordHash = _passwordService.HashPassword(user.Password);
+            user.Password = passwordHash;
 
             await _userRepo.CreateUserAsync(user);
 

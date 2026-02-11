@@ -28,15 +28,17 @@ namespace BlogAPP_API.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDate data)
         {
-            var user = await _logService.Login(data);
-            if (user == null)
-                return Ok(new
-                {
-                    success = false,
-                    messegeEror = "Неверный Email или пароль"
-                });
+            try
+            {
+                var user = await _logService.Login(data);
+                if (user == null)
+                    return Ok(new
+                    {
+                        success = false,
+                        messegeEror = "Неверный Email или пароль"
+                    });
 
-            var claims = new List<Claim>
+                var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Name),
@@ -45,22 +47,27 @@ namespace BlogAPP_API.Controllers
                 new Claim("CountPost", user.CountPost.ToString() ?? "1"),
             };
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            var authProperties = new AuthenticationProperties
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
+                    AllowRefresh = true
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
+                return Ok(new { success = true, user });
+            }
+            catch (Exception ex)
             {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
-                AllowRefresh = true
-            };
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
-
-            return Ok(new { success = true , user });
+                return Ok(new { success = false, errorMessege = $"Ошибка: {ex.Message}"});
+            }
         }
 
         [HttpPost]

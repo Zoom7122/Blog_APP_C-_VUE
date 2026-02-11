@@ -51,7 +51,7 @@
 
         <div v-for="(com, comIndex) in article.comments">
           <div class="Comments">
-            <p>Комментарий : {{ comIndex }}</p>
+            <p>Комментарий : {{ comIndex + 1 }}</p>
             <h5 class="nameAuthorConnent"> {{ com.UserName }}</h5>
             <p class="contentComments">{{ com.Content }}</p>
             <p class="timeComments"> Опубликован в {{ com.CreatedAt || "1212"}}</p>
