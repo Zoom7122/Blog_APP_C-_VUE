@@ -48,7 +48,9 @@ namespace blogApp_DAL
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<Article_Tag>()
-                .HasKey(x => new { x.TagId, x.ArticleId });
+                .HasKey(x => new { x.Tag_id, x.Article_id });
+
+
 
         }
     }

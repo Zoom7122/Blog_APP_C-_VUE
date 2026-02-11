@@ -5,33 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml.Linq;
 
 namespace BlogAPP_DAL.Repository
 {
-    public class TagRepo : ITagRepo
+    public class Article_TagRepo : IArticle_TagRepo
     {
-
         private readonly Blog_DBcontext _context;
 
-        public TagRepo(Blog_DBcontext context)
+        public Article_TagRepo(Blog_DBcontext context)
         {
             _context = context;
         }
 
-        public async Task CreateTagAsync(Tag tag)
+        public async Task CreateRowTable(Article_Tag article_Tag)
         {
-            var entry = _context.Entry(tag);
+            var entry = _context.Entry(article_Tag);
             if (entry.State == EntityState.Detached)
-                await _context.Tags.AddAsync(tag);
+                await _context.Article_Tags.AddAsync(article_Tag);
 
             await _context.SaveChangesAsync();
         }
-
-        public async Task<Tag> FindTagByName(string name)
-        {
-            return await _context.Tags.FirstOrDefaultAsync(x => x.Name == name);
-        }
-
     }
 }

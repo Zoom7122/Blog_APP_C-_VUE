@@ -122,11 +122,23 @@ export default {
       catch(error) {
 
       }
+    },
+      async GetCountPost(){
+
+     try {
+          const countP = await api.get('ArticleConrtroller/GetCountArticle');
+
+          this.user.countPost = countP.data
+
+        } catch (error) {
+        console.error('Ошибка при загрузке комментариев:', error);
     }
   },
-  mounted() {
+  },
+  async mounted() {
     console.log('Dashboard получил пользователя:', this.user);
     this.GetCountComments();
+    this.GetCountPost();
   }
 }
 </script>

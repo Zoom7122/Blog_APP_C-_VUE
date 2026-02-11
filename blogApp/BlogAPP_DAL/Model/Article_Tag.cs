@@ -9,16 +9,19 @@ namespace blogApp_DAL.Model
     [Table("Article_Tag")]
     public class Article_Tag
     {
-        // tag_id (TEXT, Not Null, Part of Composite Key)
-        public string TagId { get; set; }
+        [Column("Tag_id")]
+        public string Tag_id { get; set; }
 
-        // article_id (TEXT, Not Null, Part of Composite Key)
-        public string ArticleId { get; set; }
+        [Column("Article_id")]
+        public string Article_id { get; set; }
 
-        // created_at (DATETIME, Default: CURRENT_TIMESTAMP, Nullable в схеме)
-        public DateTime? CreatedAt { get; set; }
+        [Column("Created_at")]
+        public DateTime Created_at { get; set; }
 
+        [ForeignKey("Tag_id")]
         public virtual Tag Tag { get; set; }
+
+        [ForeignKey("Article_id")]
         public virtual Article Article { get; set; }
     }
 }

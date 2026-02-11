@@ -44,6 +44,8 @@ builder.Services.AddScoped<IArticleRepo, ArticleRepo>();
 builder.Services.AddScoped<ICommentsRepo, CommentsRepo>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<ITagRepo, TagRepo>();
+builder.Services.AddScoped<IArticle_TagRepo, Article_TagRepo>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 
 
@@ -66,7 +68,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-var app = builder.Build();
+    var app = builder.Build();
 
 // Конфигурация middleware pipeline
 if (app.Environment.IsDevelopment())

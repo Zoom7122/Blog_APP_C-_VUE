@@ -12,15 +12,51 @@ namespace BlogAPP_BLL.Services
     public class TagService : ITagService
     {
         private readonly ITagRepo _tagRepo;
+        private readonly IArticle_TagRepo _article_TagRepo;
 
-        public TagService(ITagRepo tagRepo)
+        public TagService(ITagRepo tagRepo, IArticle_TagRepo article_TagRepo)
         {
             _tagRepo = tagRepo;
+            _article_TagRepo = article_TagRepo;
         }
 
-        public Task<bool> CreatrTagToArticle(Tag tag, string articleId)
+        public async Task CreatrTagToArticleAsync(string tag, string articleId)
         {
-            throw new NotImplementedException();
+            var existTagInDb = await _tagRepo.FindTagByName(tag);
+
+            if (existTagInDb != null)
+            {
+                var article_TagCreateConnection = new Article_Tag()
+                {
+                    Tag_id = existTagInDb.Id,
+                    Article_id = articleId,
+                    Created_at = DateTime.Now,
+                };
+
+                await _article_TagRepo.CreateRowTable(article_TagCreateConnection);
+                return;
+            }
+
+            var tagToPush = new Tag()
+            { 
+                Name = tag,
+                Created_At = DateTime.Now,
+                Id = Guid.NewGuid().ToString()
+            };
+
+            await _tagRepo.CreateTagAsync(tagToPush);
+
+            var articler_Tag = new Article_Tag()
+            {
+                Tag_id = tagToPush.Id,
+                Article_id = articleId,
+                Created_at = DateTime.Now,
+            };
+
+            await _article_TagRepo.CreateRowTable(articler_Tag);
+
+            return;
         }
+
     }
 }

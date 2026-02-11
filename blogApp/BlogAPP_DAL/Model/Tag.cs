@@ -16,6 +16,7 @@ namespace blogApp_DAL.Model
         [Required] // Указывает, что поле обязательно и в БД станет NOT NULL
         public string Name { get; set; }
 
-        public DateTime? CreatedAt { get; set; } // Nullable DateTime в C#
+        [Required]
+        public DateTime Created_At { get; set; } // Nullable DateTime в C#
     }
 }

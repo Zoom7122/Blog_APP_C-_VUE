@@ -5,11 +5,8 @@ using System.Text;
 
 namespace BlogAPP_DAL.Intarface
 {
-    public interface ITagRepo
+    public interface IArticle_TagRepo
     {
-        Task CreateTagAsync(Tag tag);
-
-        Task<Tag> FindTagByName(string name);
-
+        Task CreateRowTable(Article_Tag article_Tag);
     }
 }

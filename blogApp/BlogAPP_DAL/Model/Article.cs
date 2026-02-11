@@ -25,8 +25,6 @@ namespace blogApp_DAL.Model
         // cover_image (TEXT, Nullable)
         public string? Cover_image { get; set; }
 
-        public string Author_Name { get; set; }
-
         public string? Author_Email { get; set; }
 
         // views (INTEGER, Default: 0)

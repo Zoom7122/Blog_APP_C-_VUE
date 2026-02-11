@@ -23,6 +23,22 @@
         />
       </div>
 
+      <div class="form-group">
+        <label for="title">Теги статьи</label>
+        <div v-for="(tag, index) in article.Tag" :key="index" class="tag-chip">
+           {{ tag }}
+           <span @click="removeTag(index)" class="remove-tag">&times;</span>
+        </div> 
+        <input
+          type="text"
+          v-model="tagInput"
+          @keydown.enter.prevent="addTag"
+          placeholder="Введите тег и нажмите Enter..."
+          class="form-input tag-input"
+        />
+         <small class="hint">Нажмите Enter, чтобы добавить тег</small>
+      </div>
+
       <!-- Slug (ЧПУ) -->
       <div class="form-group">
         <label for="slug">URL адрес (slug)</label>
@@ -41,7 +57,7 @@
         <label for="excerpt">Краткое описание *</label>
         <textarea
           id="excerpt"
-          v-model="article.description"
+          v-model="article.Description"
           placeholder="Краткое описание статьи (будет показано в списках)"
           rows="3"
           required
@@ -54,7 +70,7 @@
         <label for="content">Текст статьи *</label>
         <textarea
           id="content"
-          v-model="article.text"
+          v-model="article.Text"
           placeholder="Начните писать вашу статью здесь..."
           rows="10"
           required
@@ -108,10 +124,12 @@ export default {
       article: {
         Title: '',
         CoverImage: '',
-        description: '',
-        text: '',
-        ReadTime: 0
+        Description: '',
+        Text: '',
+        ReadTime: 1,
+        Tag: []
       },
+        tagInput: '',
         errorApi: false,
         successSendData: false
     }
@@ -150,7 +168,17 @@ export default {
       const mes = err.response?.data?.messegeError || err.message;
       this.errorApi = "Ошибка отправки: " + mes;
     }
-    }
+    },
+    addTag(){
+      const val =this.tagInput.trim()
+      if(val && !this.article.Tag.includes(val)){
+        this.article.Tag.push(val)
+      }
+      this.tagInput ='';
+    },
+    removeTag(index) {
+      this.article.Tag.splice(index, 1);
+    },
   },
   mounted() {
     // Устанавливаем текущую дату и время по умолчанию

@@ -7,6 +7,6 @@ namespace BlogAPP_BLL.Intarface
 {
     public interface ITagService
     {
-        Task<bool> CreatrTagToArticle(Tag tag, string articleId);
+        Task CreatrTagToArticleAsync(string tag, string articleId);
     }
 }

@@ -17,12 +17,15 @@ namespace BlogAPP_BLL.Services
         private readonly IMapper _mapper;
         private readonly IArticleRepo _articleRepo;
         private readonly ICommentsService _commentsService;
+        private readonly ITagService _tagService;
 
-        public ArticleService(IArticleRepo articleRepo, IMapper mapper, ICommentsService commentsService)
+        public ArticleService(IArticleRepo articleRepo, IMapper mapper,
+            ICommentsService commentsService, ITagService tagService)
         {
             _articleRepo = articleRepo;
             _mapper = mapper;
             _commentsService = commentsService;
+            _tagService = tagService;
         }
 
         public async Task<int> CountArticleWroteByUserAsync(string email)
@@ -30,48 +33,40 @@ namespace BlogAPP_BLL.Services
             return await _articleRepo.GetCountArticleInDbPostByUserAsync(email);
         }
 
-        public async Task<List<ArticleReturnInAPI>> FindArticleByTitile(string title)
-        {
-            var listArticle = await _articleRepo.GetArticleByTitileAsync(title);
-
-            List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
-
-            for (int i = 0; i < listArticle.Count; i++)
-            {
-                var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
-                listArticleToApi.Add(article);
-            }
-
-            return listArticleToApi;
-        }
 
         public async Task<bool> CreateArticle(CreateArticleModel model, UserCookie userCooki)
         {
             if (model.Title == null)
                 throw new ArticleException("Заполните название");
 
-            if (model.text == null)
+            if (model.Text == null)
                 throw new ArticleException("Текст не null");
 
             if (model.ReadTime <= 0)
                 throw new ArticleException("Заполните время чтения");
 
-            if (model.description == null)
+            if (model.Description == null)
                 throw new ArticleException("Заполните описание");
 
-
             if (userCooki == null && userCooki.Email == null)
-                throw new ArticleException("Необходим email из кук");
+                throw new ArticleException("Необходим email");
 
             var article = _mapper.Map<Article>(model);
-
-            article.Author_Name = userCooki.Name;
 
             article.Author_Email = userCooki.Email;
 
             article.PublishedAt = DateTime.Now;
 
             await _articleRepo.CreateArticleinDbAsync(article);
+
+            //далее добавление тегов
+
+            List<string> tags = model.Tag; 
+
+            for(int i=0;i <tags.Count; i++)
+            {
+                await _tagService.CreatrTagToArticleAsync(tags[i], article.Id);
+            }
 
             return true;
         }

@@ -29,12 +29,6 @@ namespace BlogAPP_DAL.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Article>> GetAllArticleByNameAuthor(string name)
-        {
-            return await _context.Articles.Where(
-                x => x.Author_Name == name).ToListAsync();
-        }
-
         public async Task<Article> GetArticleByIdAsync(string id)
         {
             return await _context.Articles.FirstOrDefaultAsync(x => x.Id == id);

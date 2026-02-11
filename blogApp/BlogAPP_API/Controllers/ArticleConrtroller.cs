@@ -1,6 +1,7 @@
 ﻿using BlogAPP_BLL.Intarface;
 using BlogAPP_BLL.Models;
 using BlogAPP_Core.Models;
+using blogApp_DAL.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime;
@@ -21,7 +22,8 @@ namespace BlogAPP_API.Controllers
 
         [HttpPost]
         [Route("CreateArticle")]
-        public async Task<IActionResult> CreateArticleAsync([FromBody] CreateArticleModel model)
+        public async Task<IActionResult> CreateArticleAsync(
+            [FromBody] CreateArticleModel model)
         {
             try
             {
@@ -73,6 +75,23 @@ namespace BlogAPP_API.Controllers
                 return Ok(new { success = false, messegeEror = $"Ошибка: {ex.Message}" });
             }
 
+        }
+
+        [HttpGet]
+        [Route("GetCountArticle")]
+        public async Task<IActionResult> GetCountArticle()
+        {
+            int countPost = 0;
+            try
+            {
+                var email = User?.FindFirst(ClaimTypes.Email)?.Value;
+                countPost = await _articleService.CountArticleWroteByUserAsync(email);
+                return Ok(countPost);
+            }
+            catch
+            {
+                return Ok(countPost);
+            }
         }
     }
 }

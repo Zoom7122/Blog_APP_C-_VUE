@@ -60,8 +60,6 @@ namespace BlogAPP_API.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            user.CountPost = await _articleService.CountArticleWroteByUserAsync(user.Email);
-
             return Ok(new { success = true , user });
         }
 
