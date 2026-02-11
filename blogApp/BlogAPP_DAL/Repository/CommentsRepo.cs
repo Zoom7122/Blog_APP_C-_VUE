@@ -28,6 +28,11 @@ namespace BlogAPP_DAL.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Comment>> FindCommentsArticle(string ArticleId)
+        {
+            return await _context.Comments.Where(x => x.ArticleId == ArticleId).ToListAsync();
+        }
+
         public async Task<int> FindCountCommetsWroteByUser(string userId)
         {
             return await _context.Comments.CountAsync(x => x.UserId == userId);

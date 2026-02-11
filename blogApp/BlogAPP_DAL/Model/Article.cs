@@ -20,9 +20,6 @@ namespace blogApp_DAL.Model
         [Required]
         public string Text { get; set; }
 
-        // excerpt (TEXT, Nullable)
-        public string? Tag { get; set; }
-
         public string? Description { get; set; }
 
         // cover_image (TEXT, Nullable)

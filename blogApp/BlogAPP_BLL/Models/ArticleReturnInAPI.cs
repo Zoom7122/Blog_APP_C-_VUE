@@ -26,5 +26,7 @@ namespace BlogAPP_BLL.Models
 
         public DateTime? PublishedAt { get; set; }
 
+        public List<CommentsViewModel>? comments { get; set; } = new List<CommentsViewModel>();
+
     }
 }

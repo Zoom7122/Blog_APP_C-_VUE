@@ -30,7 +30,7 @@ namespace blogApp_DAL.Repository
             return true;
         }
 
-        public async void CreateUserAsync(User user)
+        public async Task CreateUserAsync(User user)
         {
             var entry = _context.Entry(user);
             if (entry.State == EntityState.Detached)
@@ -42,6 +42,11 @@ namespace blogApp_DAL.Repository
         public async Task<User> FindUserByEmail(string email)
         {
             return await _context.User.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<User> FindUserById(string id)
+        {
+            return await _context.User.FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

@@ -4,7 +4,13 @@ using System.Text;
 
 namespace BlogAPP_BLL.Models
 {
-    internal class CommentsViewModel
+    public class CommentsViewModel
     {
+        public string UserName { get; set; }
+
+        public string Content { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
     }
 }

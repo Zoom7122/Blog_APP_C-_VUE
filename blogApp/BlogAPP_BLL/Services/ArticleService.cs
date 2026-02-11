@@ -16,11 +16,13 @@ namespace BlogAPP_BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IArticleRepo _articleRepo;
+        private readonly ICommentsService _commentsService;
 
-        public ArticleService(IArticleRepo articleRepo, IMapper mapper)
+        public ArticleService(IArticleRepo articleRepo, IMapper mapper, ICommentsService commentsService)
         {
             _articleRepo = articleRepo;
             _mapper = mapper;
+            _commentsService = commentsService;
         }
 
         public async Task<int> CountArticleWroteByUserAsync(string email)
@@ -57,6 +59,7 @@ namespace BlogAPP_BLL.Services
             if (model.description == null)
                 throw new ArticleException("Заполните описание");
 
+
             if (userCooki == null && userCooki.Email == null)
                 throw new ArticleException("Необходим email из кук");
 
@@ -68,67 +71,43 @@ namespace BlogAPP_BLL.Services
 
             article.PublishedAt = DateTime.Now;
 
-            _articleRepo.CreateArticleinDbAsync(article);
+            await _articleRepo.CreateArticleinDbAsync(article);
 
             return true;
         }
 
-        public async Task<List<ArticleReturnInAPI>> FindArticleByProperties(
-            ArticlePropertiesFind properties)
+
+        public async Task<List<ArticleReturnInAPI>> FindArticleByProperties(ArticlePropertiesFind properties)
         {
             if (properties == null)
                 return null;
 
-            if(properties.Title == null && properties.Tag != null)
+            var listArticle = await GetArticlesByCriteria(properties);
+            var listArticleToPush = listArticle?.Select(article => _mapper.Map<ArticleReturnInAPI>(article)).ToList();
+
+            for (int i =0; i< listArticle.Count;i++)
             {
-                var listArticle = await _articleRepo.GetArticleByTagAsync(properties.Tag);
 
-                if (listArticle == null) return null;
-
-                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
-
-                for (int i = 0; i < listArticle.Count; i++)
+                var comments = await _commentsService.ArticleComments(listArticle[i]);
+                if (comments != null)
                 {
-                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
-                    listArticleToApi.Add(article);
+                    for (int j = 0; j < comments.Count; j++)
+                    {
+                        listArticleToPush[i].comments.Add(comments[j]);
+                    }
                 }
 
-                return listArticleToApi;
             }
-            else if (properties.Title != null && properties.Tag == null)
+            return listArticleToPush;
+        }
+
+        private async Task<List<Article>> GetArticlesByCriteria(ArticlePropertiesFind properties)
+        {
+            return (properties.Title) switch
             {
-                var listArticle = await _articleRepo.GetArticleByTitileAsync(properties.Title);
-
-                if (listArticle == null) return null;
-
-                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
-
-                for (int i = 0; i < listArticle.Count; i++)
-                {
-                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
-                    listArticleToApi.Add(article);
-                }
-
-                return listArticleToApi;
-            }
-            else if (properties.Title != null && properties.Tag != null)
-            {
-                var listArticle = await _articleRepo.GetArticleByTitileANDTagAsync(properties);
-
-                if (listArticle == null) return null;
-
-                List<ArticleReturnInAPI> listArticleToApi = new List<ArticleReturnInAPI>();
-
-                for (int i = 0; i < listArticle.Count; i++)
-                {
-                    var article = _mapper.Map<ArticleReturnInAPI>(listArticle[i]);
-                    listArticleToApi.Add(article);
-                }
-
-                return listArticleToApi;
-            }
-
-            return null;
+                (null) => null,
+                (string title) => await _articleRepo.GetArticleByTitileAsync(title),
+            };
         }
     }
 }

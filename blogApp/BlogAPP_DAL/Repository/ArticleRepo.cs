@@ -20,7 +20,7 @@ namespace BlogAPP_DAL.Repository
             _context = context;
         }
 
-        public async void CreateArticleinDbAsync(Article article)
+        public async Task CreateArticleinDbAsync(Article article)
         {
             var entry = _context.Entry(article);
             if(entry.State == EntityState.Detached)
@@ -38,11 +38,6 @@ namespace BlogAPP_DAL.Repository
         public async Task<Article> GetArticleByIdAsync(string id)
         {
             return await _context.Articles.FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public async Task<List<Article>> GetArticleByTagAsync(string tag)
-        {
-            return await _context.Articles.Where(x => x.Tag == tag).ToListAsync();
         }
 
         public async Task<List<Article>> GetAllArticlesAsync()
@@ -68,8 +63,7 @@ namespace BlogAPP_DAL.Repository
         public async Task<List<Article>> GetArticleByTitileANDTagAsync(
             ArticlePropertiesFind propertiesFind)
         {
-            return await _context.Articles.Where(x =>x.Title == propertiesFind.Title &&
-            x.Tag == propertiesFind.Tag).ToListAsync();
+            return await _context.Articles.Where(x =>x.Title == propertiesFind.Title).ToListAsync();
         }
     }
 }

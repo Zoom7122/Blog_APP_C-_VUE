@@ -70,7 +70,7 @@ namespace BlogAPP_BLL.Services
                 user.Role = "User";
             }
 
-            _userRepo.CreateUserAsync(user);
+            await _userRepo.CreateUserAsync(user);
 
             return true;
         }

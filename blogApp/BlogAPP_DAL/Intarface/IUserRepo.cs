@@ -11,7 +11,9 @@ namespace blogApp_DAL.Intarface
 
         Task<bool> CanLoginInAccount(string email, string password);
 
-        void CreateUserAsync(User user);
+        Task CreateUserAsync(User user);
+
+        Task<User> FindUserById(string id);
         
     }
 }

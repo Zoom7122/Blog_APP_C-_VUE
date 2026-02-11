@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlogAPP_API.Controllers
 {
     [Authorize]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     public class ArticleViewController : ControllerBase
     {

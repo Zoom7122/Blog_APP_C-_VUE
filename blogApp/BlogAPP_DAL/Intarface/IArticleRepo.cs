@@ -14,7 +14,7 @@ namespace BlogAPP_DAL.Intarface
 
         Task<List<Article>> GetAllArticleByNameAuthor(string name);
 
-        void CreateArticleinDbAsync(Article article);
+        Task CreateArticleinDbAsync(Article article);
 
         Task<List<Article>> GetArticlesByEmailAthorAsync(string emailAthor);
 
@@ -24,6 +24,5 @@ namespace BlogAPP_DAL.Intarface
 
         Task<List<Article>> GetArticleByTitileAsync(string titile);
 
-        Task<List<Article>> GetArticleByTagAsync(string tag);
     }
 }

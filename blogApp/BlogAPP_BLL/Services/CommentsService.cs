@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BlogAPP_BLL.Exceptions;
 using BlogAPP_BLL.Intarface;
 using BlogAPP_BLL.Models;
 using blogApp_DAL.Intarface;
@@ -16,11 +17,34 @@ namespace BlogAPP_BLL.Services
     {
         private readonly ICommentsRepo _commentsRepo;
         private readonly IMapper _mapper;
+        private readonly IUserRepo _userRepo;
 
-        public CommentsService(ICommentsRepo commentsRepo, IMapper mapper)
+        public CommentsService(ICommentsRepo commentsRepo, IMapper mapper, IUserRepo userRepo)
         {
             _commentsRepo = commentsRepo;
             _mapper = mapper;
+            _userRepo = userRepo;
+        }
+
+        public async Task<List<CommentsViewModel>> ArticleComments(Article article)
+        {
+            List<CommentsViewModel> commentsToPush = new List<CommentsViewModel>();
+
+
+            var user = await _userRepo.FindUserByEmail(article.Author_Email);
+
+            if (user == null)
+                throw new UserNotFoundException();
+
+            var comments = await _commentsRepo.FindCommentsArticle(article.Id);
+
+            for (int i = 0; i < comments.Count; i++)
+            {
+                commentsToPush.Add(_mapper.Map<CommentsViewModel>(comments[i]));
+                commentsToPush[i].UserName = user.FirstName;
+            }
+
+            return commentsToPush;
         }
 
         public async Task<bool> CreateComments(CommentModelsCreate modelsCreate)

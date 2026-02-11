@@ -42,6 +42,28 @@
 
         <AddComment :articleId="article.Id"></AddComment>
         
+        <button v-show="!showComments" 
+        @click="showComments = true"
+        class="showCommentsButton" >Показать комментарии к статье</button>
+
+        <div v-show="showComments" class="divComments">
+        <div class="countComments"> Колличество камментариев: {{ article.comments.length }}</div>
+
+        <div v-for="(com, comIndex) in article.comments">
+          <div class="Comments">
+            <p>Комментарий : {{ comIndex }}</p>
+            <h5 class="nameAuthorConnent"> {{ com.UserName }}</h5>
+            <p class="contentComments">{{ com.Content }}</p>
+            <p class="timeComments"> Опубликован в {{ com.CreatedAt || "1212"}}</p>
+          </div>
+        </div>
+
+        <button v-show="showComments" 
+          @click="showComments = false"
+          class="closeCommentsButton">Скрыть комментарии к статье</button>
+
+        </div>
+        
         <hr v-if="index < ArticleList.length - 1">
       </div>
     </div>
@@ -64,6 +86,8 @@ export default {
     return {
       ArticleList: [],
       
+      showComments: false,
+
       properties: {
         Title: null,
         Tag: null
@@ -87,7 +111,7 @@ export default {
     async FindByProperties() {
       try {
         console.log('Пользователь ввел: ' + this.properties.Title)
-        const response = await api.post('/ArticleView/FindByProperties', this.properties)
+        const response = await api.post('ArticleConrtroller/FindByProperties', this.properties)
 
         console.log('Ответ от API: ', response.data)
         console.log('Успех: ' + response.data.success)
@@ -96,9 +120,8 @@ export default {
           
           if (response.data.list.length > 0) {
             
-            console.log('Полученные: ', response.data.list[0])
+            console.log('Полученные данные: ', response.data.list)
 
-            console.log('Первый элемент списка: ', response.data.list[0])
           }
 
           this.ArticleList = response.data.list.map(item => {
@@ -113,7 +136,12 @@ export default {
                 Author_Email: item.author_Email || '',
                 ReadTime: item.readTime || 0,
                 PublishedAt: item.publishedAt || null,
-            };
+                comments: item.comments ? item.comments.map(com => ({
+                  UserName: com.userName || 'Нет имени',
+                  Content: com.content || 'Нет текста',
+                  CreatedAt: com.createdAt.slice(0,10) || ''
+                })) : []
+            }
            console.log('Преобразованный элемент: ', article);
 
             console.log('Структура полученного элемента:', Object.keys(item));
@@ -406,5 +434,260 @@ hr {
   .article-description {
     font-size: 16px;
   }
+}
+
+/* Стили для блока комментариев */
+.showCommentsButton {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #42b883 0%, #3aa873 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(66, 184, 131, 0.25);
+}
+
+.showCommentsButton:hover {
+  background: linear-gradient(135deg, #3aa873 0%, #329c66 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(66, 184, 131, 0.35);
+}
+
+.showCommentsButton:active {
+  transform: translateY(0);
+}
+
+.divComments {
+  margin-top: 25px;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border-left: 4px solid #42b883;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.countComments {
+  font-size: 18px;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.countComments::before {
+  content: "💬";
+  font-size: 20px;
+}
+
+.Comments {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.Comments:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.Comments > p:first-child {
+  font-size: 12px;
+  color: #42b883;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nameAuthorComment {
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nameAuthorComment::before {
+  content: "👤";
+  font-size: 14px;
+}
+
+.contentComments {
+  color: #495057;
+  line-height: 1.7;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #e9ecef;
+  font-size: 15px;
+  white-space: pre-line;
+}
+
+.timeComments {
+  font-size: 13px;
+  color: #6c757d;
+  margin-top: 10px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timeComments::before {
+  content: "🕒";
+  font-size: 12px;
+}
+
+.closeCommentsButton {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.25);
+  width: 100%;
+}
+
+.closeCommentsButton:hover {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(108, 117, 125, 0.35);
+}
+
+.closeCommentsButton:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .divComments {
+    padding: 20px 15px;
+  }
+  
+  .Comments {
+    padding: 15px;
+  }
+  
+  .contentComments {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .showCommentsButton,
+  .closeCommentsButton {
+    width: 100%;
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .divComments {
+    padding: 15px 12px;
+  }
+  
+  .countComments {
+    font-size: 16px;
+  }
+  
+  .nameAuthorComment {
+    font-size: 15px;
+  }
+  
+  .contentComments {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .timeComments {
+    font-size: 12px;
+  }
+}
+
+
+.divComments {
+  animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+  to {
+    opacity: 1;
+    max-height: 2000px;
+  }
+}
+
+
+
+.showCommentsButton::after {
+  content: " ▼";
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.closeCommentsButton::before {
+  content: "▲ ";
+  font-size: 12px;
+}
+
+
+.Comments.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #42b883;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 </style>

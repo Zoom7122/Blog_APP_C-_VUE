@@ -57,6 +57,8 @@ namespace BlogAPP_BLL.Mappings
             CreateMap<CommentModelsCreate, Comment>()
                 .ForMember(dest => dest.Id,
                 opt => opt.MapFrom(_ => Guid.NewGuid().ToString()));
+
+            CreateMap<Comment, CommentsViewModel>();
         }
 
     }

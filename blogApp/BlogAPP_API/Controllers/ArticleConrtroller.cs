@@ -52,5 +52,28 @@ namespace BlogAPP_API.Controllers
                     messegeError = ex.Message });
             }
         }
+
+        [HttpPost]
+        [Route("FindByProperties")]
+        public async Task<IActionResult> FindByProperties(
+          [FromBody] ArticlePropertiesFind propertiesFind)
+        {
+            try
+            {
+                List<ArticleReturnInAPI> list = await _articleService.FindArticleByProperties(propertiesFind);
+
+                if (list == null || list.Count <= 0)
+                    return Ok(new { success = false, messegeEror = "Статьи не найдены" });
+
+                return Ok(new { success = true, list });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { success = false, messegeEror = $"Ошибка: {ex.Message}" });
+            }
+
+        }
     }
 }
+

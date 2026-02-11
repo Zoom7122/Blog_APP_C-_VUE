@@ -8,6 +8,5 @@ namespace BlogAPP_Core.Models
     {
         public string Title { get; set; }
 
-        public string Tag { get; set; }
     }
 }

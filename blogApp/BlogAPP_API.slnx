@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="BlogAPP_API/BlogAPP_API.csproj" />
   <Project Path="BlogAPP_BLL/BlogAPP_BLL.csproj" />
   <Project Path="BlogAPP_Core/BlogAPP_Core.csproj" Id="00887fd0-26aa-4547-bbe1-dd1244e256a7" />

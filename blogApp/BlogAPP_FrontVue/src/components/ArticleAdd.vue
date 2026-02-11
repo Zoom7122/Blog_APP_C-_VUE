@@ -3,7 +3,7 @@
     <div class="header">
       <h1>Новая статья</h1>
       <p>Заполните все поля для публикации статьи</p>
-    <button @click="CloseAddView" class="btn btn-primary">
+    <button @click="CloseAddView" class="btn btn-primary" style="background-color: #ff5252;">
         Выйти
     </button>
     </div>
@@ -44,6 +44,7 @@
           v-model="article.description"
           placeholder="Краткое описание статьи (будет показано в списках)"
           rows="3"
+          required
           class="form-textarea"
         ></textarea>
       </div>
@@ -56,6 +57,7 @@
           v-model="article.text"
           placeholder="Начните писать вашу статью здесь..."
           rows="10"
+          required
           class="form-textarea large"
         ></textarea>
       </div>
@@ -70,7 +72,7 @@
               <input
                 type="number"
                 v-model="article.ReadTime"
-                min="0"
+                min="1"
                 class="meta-input"
                 placeholder="5"
               />
