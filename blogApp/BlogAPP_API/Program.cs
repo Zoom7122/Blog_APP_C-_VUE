@@ -52,7 +52,7 @@ builder.Services.AddDbContext<Blog_DBcontext>(opt => opt.UseSqlite(cs));
 builder.Services.AddDal();
 builder.Services.AddBll();
 
-
+builder.Services.AddTransient<BlogAPP_API.Middleware.ExceptionHandlingMiddleware>();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -77,6 +77,8 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+app.UseMiddleware<BlogAPP_API.Middleware.ExceptionHandlingMiddleware>();
 
 //свагер development
 if (app.Environment.IsDevelopment())

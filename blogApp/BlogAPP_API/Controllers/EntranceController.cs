@@ -26,6 +26,9 @@ namespace BlogAPP_API.Controllers
             _articleService = articleService;
         }
 
+        [HttpGet("boom")]
+        public IActionResult Boom() => throw new Exception("test error");
+
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromBody] LoginDate data)
