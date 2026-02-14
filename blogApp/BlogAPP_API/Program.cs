@@ -25,8 +25,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.None;
         options.Cookie.Name = "AuthCookie";
-        options.LoginPath = "/api/EntranceConroller/Login";
-        options.LogoutPath = "/api/EntranceConroller/Logout";
+        options.LoginPath = "/api/Entrance/Login";
+        options.LogoutPath = "/api/Entrance/Logout";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
     });
@@ -69,12 +69,14 @@ builder.Services.AddCors(options =>
 });
 
 
+builder.Services.AddAuthorization();
+
 //свагер
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-    var app = builder.Build();
+var app = builder.Build();
 
 //свагер development
 if (app.Environment.IsDevelopment())
