@@ -37,5 +37,22 @@ namespace BlogAPP_DAL.Repository
         {
             return await _context.Comments.CountAsync(x => x.UserId == userId);
         }
+
+        public async Task<bool> DeleteCommentByIdAsync(string commentId)
+        {
+            var comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == commentId);
+            if (comment == null)
+                return false;
+
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> IsCommentOwnedByUserAsync(string commentId, string userId)
+        {
+            return await _context.Comments.AnyAsync(x => x.Id == commentId && x.UserId == userId);
+        }
     }
 }

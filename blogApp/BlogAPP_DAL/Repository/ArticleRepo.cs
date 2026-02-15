@@ -101,5 +101,26 @@ namespace BlogAPP_DAL.Repository
                             .Contains(t)));
             return await query.ToListAsync();
         }
+
+
+        public async Task<bool> DeleteArticleByIdAsync(string articleId)
+        {
+            var article = await _context.Articles.FirstOrDefaultAsync(x => x.Id == articleId);
+            if (article == null)
+                return false;
+
+            var articleTags = await _context.Article_Tags.Where(x => x.Article_id == articleId).ToListAsync();
+            if (articleTags.Any())
+                _context.Article_Tags.RemoveRange(articleTags);
+
+            var comments = await _context.Comments.Where(x => x.ArticleId == articleId).ToListAsync();
+            if (comments.Any())
+                _context.Comments.RemoveRange(comments);
+
+            _context.Articles.Remove(article);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

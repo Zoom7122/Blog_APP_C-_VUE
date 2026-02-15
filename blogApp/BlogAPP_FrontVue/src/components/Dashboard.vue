@@ -53,7 +53,7 @@
   </div>
 
 
-<ArticleView v-show="showArticleView"></ArticleView>
+<ArticleView v-show="showArticleView" :userRole="user.role"></ArticleView>
 <ArticleAdd v-show="showArticleForm" 
   @close="showArticleForm = false"
   @closeAddArticle="showArticleIsAdd"

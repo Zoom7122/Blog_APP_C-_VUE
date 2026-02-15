@@ -41,12 +41,15 @@ namespace BlogAPP_API.Controllers
                         ErrorMessage = "Неверный Email или пароль"
                     });
 
+                var userRole = string.IsNullOrWhiteSpace(user.Role) ? "User" : user.Role;
+
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim("Avatar", user.Avatar_url ?? ""),
-                new Claim("Role", user.Role ?? "User"),
+                new Claim("Role", userRole),
+                new Claim(ClaimTypes.Role, userRole),
                 new Claim("CountPost", user.CountPost.ToString() ?? "1"),
             };
 

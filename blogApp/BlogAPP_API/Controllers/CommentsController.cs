@@ -50,6 +50,25 @@ namespace BlogAPP_API.Controllers
 
         }
 
+        [HttpDelete("{commentId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteComment(string commentId)
+        {
+            try
+            {
+                var result = await _commentsService.DeleteCommentAsync(commentId);
+
+                if (!result)
+                    return NotFound(new { success = false, message = "Комментарий не найден" });
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
         [HttpGet]
         [Route("GetCountComments")]
         public async Task<IActionResult> GetCountComments()

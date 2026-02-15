@@ -14,5 +14,9 @@ namespace BlogAPP_DAL.Intarface
         Task<int> FindCountCommetsWroteByUser(string userId);
 
         Task<List<Comment>> FindCommentsArticle(string ArticleId);
+
+        Task<bool> DeleteCommentByIdAsync(string commentId);
+
+        Task<bool> IsCommentOwnedByUserAsync(string commentId, string userId);
     }
 }

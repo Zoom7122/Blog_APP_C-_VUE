@@ -15,6 +15,7 @@ namespace BlogAPP_BLL.Intarface
 
         Task<List<ArticleReturnInAPI>> FindArticleByProperties(ArticlePropertiesFind properties);
 
+        Task<bool> DeleteArticleAsync(string articleId);
 
     }
 }

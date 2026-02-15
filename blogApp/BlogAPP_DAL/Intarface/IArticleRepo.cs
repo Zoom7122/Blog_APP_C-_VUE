@@ -25,5 +25,7 @@ namespace BlogAPP_DAL.Intarface
         Task<List<Article>> GetArticleByTitileAsync(string titile);
         Task<List<Article>> GetArticleByTitileANDTagsAsync(string title, IEnumerable<string> tags);
 
+        Task<bool> DeleteArticleByIdAsync(string articleId);
+
     }
 }

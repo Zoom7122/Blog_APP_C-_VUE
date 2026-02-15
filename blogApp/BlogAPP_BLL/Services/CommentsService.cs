@@ -44,21 +44,23 @@ namespace BlogAPP_BLL.Services
             }
 
             return commentsToPush;
+        }
 
-            //var user = await _userRepo.FindUserByEmail(article.Author_Email);
 
-            //if (user == null)
-            //    throw new UserNotFoundException();
+        public async Task<bool> DeleteCommentAsync(string commentId)
+        {
+            if (string.IsNullOrWhiteSpace(commentId))
+                throw new Exception("CommentId is empty");
 
-            //var comments = await _commentsRepo.FindCommentsArticle(article.Id);
+            return await _commentsRepo.DeleteCommentByIdAsync(commentId);
+        }
 
-            //for (int i = 0; i < comments.Count; i++)
-            //{
-            //    commentsToPush.Add(_mapper.Map<CommentsViewModel>(comments[i]));
-            //    commentsToPush[i].UserName = user.FirstName;
-            //}
+        public async Task<bool> IsCommentOwnedByUserAsync(string commentId, string userId)
+        {
+            if (string.IsNullOrWhiteSpace(commentId) || string.IsNullOrWhiteSpace(userId))
+                return false;
 
-            //return commentsToPush;
+            return await _commentsRepo.IsCommentOwnedByUserAsync(commentId, userId);
         }
 
         public async Task<bool> CreateComments(CommentModelsCreate modelsCreate)

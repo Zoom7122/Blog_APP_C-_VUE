@@ -72,6 +72,13 @@ namespace BlogAPP_BLL.Services
             return true;
         }
 
+        public async Task<bool> DeleteArticleAsync(string articleId)
+        {
+            if (string.IsNullOrWhiteSpace(articleId))
+                throw new ArticleException("Не указан ID статьи");
+
+            return await _articleRepo.DeleteArticleByIdAsync(articleId);
+        }
 
         public async Task<List<ArticleReturnInAPI>> FindArticleByProperties(ArticlePropertiesFind properties)
         {

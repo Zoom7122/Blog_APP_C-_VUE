@@ -13,5 +13,9 @@ namespace BlogAPP_BLL.Intarface
         Task<int> GetCountCommentsWroteByUser(string userId);
 
         Task<List<CommentsViewModel>> ArticleComments(Article article);
+
+        Task<bool> DeleteCommentAsync(string commentId);
+
+        Task<bool> IsCommentOwnedByUserAsync(string commentId, string userId);
     }
 }

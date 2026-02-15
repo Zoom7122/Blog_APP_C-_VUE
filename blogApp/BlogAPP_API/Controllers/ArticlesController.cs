@@ -11,8 +11,8 @@ namespace BlogAPP_API.Controllers
 {
 
     [ApiController]
-    //[Authorize]
-    [AllowAnonymous]
+    [Authorize]
+    //[AllowAnonymous]
     [Route("api/[controller]")]
     public class ArticlesController : ControllerBase
     {
@@ -54,6 +54,24 @@ namespace BlogAPP_API.Controllers
             {
                 return Ok(new { success = false,
                     messegeError = ex.Message });
+            }
+        }
+
+        [HttpDelete("{articleId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteArticle(string articleId)
+        {
+            try
+            {
+                var result = await _articleService.DeleteArticleAsync(articleId);
+                if (!result)
+                    return NotFound(new { success = false, message = "Статья не найдена" });
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
             }
         }
 

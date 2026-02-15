@@ -40,21 +40,38 @@
           <span class="email" v-if="article.Author_Email">Email автора: {{ article.Author_Email }}</span>
         </div>
 
+        <button
+          v-if="isAdmin"
+          type="button"
+          class="closeCommentsButton"
+          @click="deleteArticle(article.Id)"
+        >
+          Удалить статью
+        </button>
+
         <AddComment :articleId="article.Id"></AddComment>
-        
-        <button v-show="!showComments" 
+
+        <button v-show="!showComments"
         @click="showComments = true"
         class="showCommentsButton" >Показать комментарии к статье</button>
 
         <div v-show="showComments" class="divComments">
         <div class="countComments"> Колличество камментариев: {{ article.comments.length }}</div>
 
-        <div v-for="(com, comIndex) in article.comments">
+         <div v-for="(com, comIndex) in article.comments" :key="com.Id || comIndex">
           <div class="Comments">
             <p>Комментарий : {{ comIndex + 1 }}</p>
             <h5 class="nameAuthorConnent"> {{ com.UserName }}</h5>
             <p class="contentComments">{{ com.Content }}</p>
             <p class="timeComments"> Опубликован в {{ com.CreatedAt || "1212"}}</p>
+              <button
+              v-if="isAdmin"
+              type="button"
+              class="closeCommentsButton"
+              @click="deleteComment(article.Id, com.Id)"
+            >
+              Удалить комментарий
+            </button>
           </div>
         </div>
 
@@ -82,6 +99,12 @@ import api from '@/axios-config';
 
 export default {
   components:{AddComment},
+    props: {
+    userRole: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       loading: false,
@@ -95,7 +118,11 @@ export default {
       }
     }
   },
-  
+    computed: {
+    isAdmin() {
+      return this.userRole === 'Admin';
+    }
+  },
   methods: {
     formatDate(dateString) {
       if (!dateString) return '';
@@ -108,27 +135,41 @@ export default {
         minute: '2-digit'
       })
     },
+    async deleteArticle(articleId) {
+      if (!articleId) return;
+      try {
+        await api.delete(`/Articles/${articleId}`);
+        this.ArticleList = this.ArticleList.filter(x => x.Id !== articleId);
+      } catch (err) {
+        console.log('Ошибка удаления статьи: ', err);
+      }
+    },
+
+    async deleteComment(articleId, commentId) {
+      if (!commentId) return;
+      try {
+        await api.delete(`/Comments/${commentId}`);
+        const article = this.ArticleList.find(x => x.Id === articleId);
+        if (!article) return;
+
+        article.comments = article.comments.filter(x => x.Id !== commentId);
+      } catch (err) {
+        console.log('Ошибка удаления комментария: ', err);
+      }
+    },
+
     
     async FindByProperties() {
       try {
         const normalizedTag = this.tagInput.trim();
         this.properties.Tags = normalizedTag ? [normalizedTag] : [];
-        console.log('Пользователь ввел: ' + this.properties.Title)
         const response = await api.post('/Articles/FindByProperties', this.properties)
 
-        console.log('Ответ от API: ', response.data)
-        console.log('Успех: ' + response.data.success)
-
         if (response.data.success && response.data.list) {
-          
-          if (response.data.list.length > 0) {
-            
-            console.log('Полученные данные: ', response.data.list)
 
-          }
 
           this.ArticleList = response.data.list.map(item => {
-            const article = {
+                return{
                 Id: item.id || '',
                 Title: item.title || '',
                 Text: item.text || '',
@@ -140,20 +181,15 @@ export default {
                 ReadTime: item.readTime || 0,
                 PublishedAt: item.publishedAt || null,
                 comments: item.comments ? item.comments.map(com => ({
+                  Id: com.id || '',
                   UserName: com.userName || 'Нет имени',
                   Content: com.content || 'Нет текста',
                   CreatedAt: com.createdAt ? com.createdAt.slice(0, 10) : ''
                 })) : []
             }
-           console.log('Преобразованный элемент: ', article);
-
-            console.log('Структура полученного элемента:', Object.keys(item));
-            return article;
           });
           
-          console.log('Массив статей: ', this.ArticleList)
         } else {
-          console.log('Статьи не найдены: ' + (response.data.messegeEror || response.data.messageError || ''))
           this.ArticleList = []
         }
       }
