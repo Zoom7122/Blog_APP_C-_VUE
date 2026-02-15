@@ -14,7 +14,7 @@ namespace BlogAPP_BLL.Models
 
         public string ArticleId { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         public DateTime? CreatedAt { get; set; }
 

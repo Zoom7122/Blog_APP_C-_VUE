@@ -6,6 +6,7 @@ using BlogAPP_Core.Models;
 using blogApp_DAL.Intarface;
 using blogApp_DAL.Model;
 using BlogAPP_DAL.Intarface;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -77,7 +78,10 @@ namespace BlogAPP_BLL.Services
             if (properties == null)
                 return null;
 
+            if(string.IsNullOrEmpty(properties.Title) && properties.Tags.Count <=0) return null;
+
             var listArticle = await GetArticlesByCriteria(properties);
+
             var listArticleToPush = listArticle?.Select(article => _mapper.Map<ArticleReturnInAPI>(article)).ToList();
 
             for (int i =0; i< listArticle.Count;i++)
@@ -101,17 +105,20 @@ namespace BlogAPP_BLL.Services
 
             if (properties == null)
                 return null;
+            
+            if(properties.Tags.Count <=0) properties.Tags = null;
 
-            if (properties.Tags != null && properties.Tags.Count > 0)
-            {
-                return await _articleRepo.GetArticlesByTagsAsync(properties.Tags);
-            }
+            if (string.IsNullOrEmpty(properties.Title)) properties.Title = null;
 
-            return properties.Title switch
+
+            return (properties.Title, properties.Tags) switch
             {
-                null => null,
-                string title => await _articleRepo.GetArticleByTitileAsync(title),
+                (null, null) => null,
+                (string title, null) => await _articleRepo.GetArticleByTitileAsync(title),
+                (null, List<string> tags) => await _articleRepo.GetArticlesByTagsAsync(tags),
+                (string title, IEnumerable<string> tags) => await _articleRepo.GetArticleByTitileANDTagsAsync(title, tags)
             };
+
         }
     }
 }

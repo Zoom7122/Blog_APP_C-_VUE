@@ -96,7 +96,7 @@ export default {
           UserId: null,
           CreatedAt: null
         };
-        
+        console.log(Comment);
         const response = await api.post("/Comments/CreateComments", Comment);
         
         console.log('Ответ от API: ', response.data);

@@ -11,7 +11,8 @@ namespace BlogAPP_API.Controllers
 {
 
     [ApiController]
-    [Authorize]
+    //[Authorize]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     public class ArticlesController : ControllerBase
     {

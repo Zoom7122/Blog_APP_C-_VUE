@@ -23,7 +23,7 @@ namespace BlogAPP_DAL.Repository
         public async Task CreateArticleinDbAsync(Article article)
         {
             var entry = _context.Entry(article);
-            if(entry.State == EntityState.Detached)
+            if (entry.State == EntityState.Detached)
                 await _context.Articles.AddAsync(article);
 
             await _context.SaveChangesAsync();
@@ -57,7 +57,7 @@ namespace BlogAPP_DAL.Repository
         public async Task<List<Article>> GetArticleByTitileANDTagAsync(
             ArticlePropertiesFind propertiesFind)
         {
-            return await _context.Articles.Where(x =>x.Title == propertiesFind.Title).ToListAsync();
+            return await _context.Articles.Where(x => x.Title == propertiesFind.Title).ToListAsync();
         }
 
         public async Task<List<Article>> GetArticlesByTagsAsync(IEnumerable<string> tags)
@@ -78,8 +78,27 @@ namespace BlogAPP_DAL.Repository
                             .Where(at => at.Article_id == a.Id)
                             .Select(at => at.Tag.Name.ToLower())
                             .Contains(t)));
-            
 
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<List<Article>> GetArticleByTitileANDTagsAsync(string title, IEnumerable<string> tags)
+        {
+            if (string.IsNullOrEmpty(title) || tags == null || !tags.Any())
+                return new List<Article>();
+            var normalized = tags.Select(t => t.Trim().ToLower()).ToList();
+            var query = _context.Articles
+                .Where(a => a.Title == title)
+                .Where(a => _context.Article_Tags
+                    .Where(at => normalized.Contains(at.Tag.Name.ToLower()))
+                    .Select(at => at.Article_id)
+                    .Contains(a.Id));
+
+            query = query.Where(a => normalized.All(t => _context.Article_Tags
+                            .Where(at => at.Article_id == a.Id)
+                            .Select(at => at.Tag.Name.ToLower())
+                            .Contains(t)));
             return await query.ToListAsync();
         }
     }
