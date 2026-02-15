@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import api from './axios-config';
 import Login from './components/Login.vue';
 import Registration from './components/RegisterPage.vue';
 import Dashboard from './components/Dashboard.vue';
@@ -53,12 +52,12 @@ import InfAboutConnecting from './components/InfAboutConnecting.vue';
 
 
 
-const responseMain = api.create({
+import axios from 'axios';
+
+const api = axios.create({
   baseURL: 'https://localhost:7284/api',
-  withCredentials: true, 
-  headers: {
-    'Content-Type': 'application/json'
-  }
+  withCredentials: true,
+  headers: { 'Content-Type': 'application/json' }
 });
 
 export default {
@@ -77,7 +76,7 @@ export default {
     };
   },
   methods: {
-    // ✅ ДОБАВЛЕНО: Метод для обработки успешного входа
+
     handleLoginSuccess(userData) {
       console.log('Получены данные пользователя:', userData);
       this.isLoggedIn = true;
@@ -85,7 +84,6 @@ export default {
       localStorage.setItem('user', JSON.stringify(userData));
     },
     
-    // ✅ ДОБАВЛЕНО: Метод для обработки успешной регистрации
     handleRegistrationSuccess(registrationData) {
       console.log('Регистрация успешна:', registrationData);
       this.currentPage = 'login';
@@ -95,7 +93,7 @@ export default {
     // Метод проверки авторизации
     async checkAuth() {
       try {
-        const response = await api.get('/EntranceConroller/CheckAuth');
+        const response = await api.get('/Entrance/CheckAuth');
 
         console.log('Ответ checkAuth:', response.data);
         
@@ -115,7 +113,7 @@ export default {
     // Метод выхода
     async handleLogout() {
       try {
-        await api.post('/EntranceConroller/Logout');
+        await api.post('/Entrance/Logout');
       } catch (error) {
         console.error('Ошибка при выходе:', error);
       }

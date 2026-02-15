@@ -22,7 +22,6 @@ namespace BlogAPP_Core.Models
         public string Avatar_url { get; set; }
         public string Bio { get; set; }
 
-        [Required]
         public string Role { get; set; } = "User"; // Значение по умолчанию
     }
 }

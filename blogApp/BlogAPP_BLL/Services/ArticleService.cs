@@ -48,7 +48,7 @@ namespace BlogAPP_BLL.Services
             if (model.Description == null)
                 throw new ArticleException("Заполните описание");
 
-            if (userCooki == null && userCooki.Email == null)
+            if (userCooki == null || userCooki.Email == null)
                 throw new ArticleException("Необходим email");
 
             var article = _mapper.Map<Article>(model);

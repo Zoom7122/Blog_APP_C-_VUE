@@ -37,7 +37,7 @@ if (string.IsNullOrWhiteSpace(cs))
     cs = $"Data source={GetPath.GetDatabasePath()}";
 }
 builder.Services.AddDbContext<Blog_DBcontext>(opt => opt.UseSqlite(cs));
-s
+
 
 builder.Services.AddDal();
 builder.Services.AddBll();
@@ -77,14 +77,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        context.Response.StatusCode = 500;
-        await context.Response.WriteAsJsonAsync(new { message = "Ошибка сервера" });
-    });
-});
+//app.UseExceptionHandler(errorApp =>
+//{
+//    errorApp.Run(async context =>
+//    {
+//        context.Response.StatusCode = 500;
+//        await context.Response.WriteAsJsonAsync(new { message = "Ошибка сервера" });
+//    });
+//});
 
 app.UseHttpsRedirection();
 
