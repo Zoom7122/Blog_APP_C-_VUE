@@ -19,8 +19,8 @@ namespace BlogAPP_Core.Models
         [MinLength(6)]
         public string Password { get; set; }
 
-        public string Avatar_url { get; set; }
-        public string Bio { get; set; }
+        public string? Avatar_url { get; set; }
+        public string? Bio { get; set; }
 
         public string Role { get; set; } = "User"; // Значение по умолчанию
     }

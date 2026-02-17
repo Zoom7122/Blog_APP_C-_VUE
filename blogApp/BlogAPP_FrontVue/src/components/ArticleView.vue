@@ -19,11 +19,14 @@
         <div class="article-header">
           <h2 class="article-title">{{ article.Title || 'Без названия' }}</h2>
           <div class="article-meta">
-            <span class="author">Автор: {{ article.Author_Name || 'Неизвестный автор' }}</span>
             <span class="date" v-if="article.PublishedAt">
               {{ formatDate(article.PublishedAt) }}
             </span>
-            <span class="tag" v-if="article.Tag">#{{ article.Tag }}</span>
+                <div class="tags" v-if="article.Tags.length">
+              <span class="tag" v-for="(tag, tagIndex) in article.Tags" :key="`${article.Id}-tag-${tagIndex}`">
+                #{{ tag }}
+              </span>
+            </div>
             <span class="read-time" v-if="article.ReadTime">Время чтения: {{ article.ReadTime }} мин.</span>
           </div>
         </div>
@@ -169,14 +172,21 @@ export default {
 
 
           this.ArticleList = response.data.list.map(item => {
+                const articleTags = Array.isArray(item.tags)
+                  ? item.tags
+                  : (item.tag
+                    ? item.tag
+                        .split(',')
+                        .map(tag => tag.trim())
+                        .filter(Boolean)
+                    : []);
                 return{
                 Id: item.id || '',
                 Title: item.title || '',
                 Text: item.text || '',
-                Tag: item.tag || '',
+                Tags: articleTags,
                 Description: item.description || '',
                 Cover_image: item.cover_image || '',
-                Author_Name: item.author_Name || '',
                 Author_Email: item.author_Email || '',
                 ReadTime: item.readTime || 0,
                 PublishedAt: item.publishedAt || null,

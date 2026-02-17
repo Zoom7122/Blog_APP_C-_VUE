@@ -398,6 +398,12 @@ hr {
   transform: translateY(1px);
 }
 
+.article-meta .tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 @media (max-width: 820px) {
   .article-view {
     padding: 14px;

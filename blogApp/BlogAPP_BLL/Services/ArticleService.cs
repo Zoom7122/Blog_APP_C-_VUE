@@ -85,7 +85,7 @@ namespace BlogAPP_BLL.Services
             if (properties == null)
                 return null;
 
-            if(string.IsNullOrEmpty(properties.Title) && properties.Tags.Count <=0) return null;
+            if (string.IsNullOrEmpty(properties.Title) && (properties.Tags == null || properties.Tags.Count <= 0)) return null;
 
             var listArticle = await GetArticlesByCriteria(properties);
 
@@ -102,6 +102,8 @@ namespace BlogAPP_BLL.Services
                         listArticleToPush[i].comments.Add(comments[j]);
                     }
                 }
+                var tags = await _articleRepo.GetTagNamesByArticleIdAsync(listArticle[i].Id);
+                listArticleToPush[i].Tags = tags ?? new List<string>();
 
             }
             return listArticleToPush;
@@ -112,8 +114,8 @@ namespace BlogAPP_BLL.Services
 
             if (properties == null)
                 return null;
-            
-            if(properties.Tags.Count <=0) properties.Tags = null;
+
+            if (properties.Tags == null || properties.Tags.Count <= 0) properties.Tags = null;
 
             if (string.IsNullOrEmpty(properties.Title)) properties.Title = null;
 

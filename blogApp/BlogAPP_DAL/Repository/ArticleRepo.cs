@@ -34,6 +34,18 @@ namespace BlogAPP_DAL.Repository
             return await _context.Articles.FirstOrDefaultAsync(x => x.Id == id);
         }
 
+
+        public async Task<List<string>> GetTagNamesByArticleIdAsync(string articleId)
+        {
+            if (string.IsNullOrWhiteSpace(articleId))
+                return new List<string>();
+
+            return await _context.Article_Tags
+                .Where(x => x.Article_id == articleId)
+                .Select(x => x.Tag.Name)
+                .ToListAsync();
+        }
+
         public async Task<List<Article>> GetAllArticlesAsync()
         {
             return await _context.Articles.ToListAsync();

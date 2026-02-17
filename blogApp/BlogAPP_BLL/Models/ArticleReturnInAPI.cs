@@ -12,7 +12,7 @@ namespace BlogAPP_BLL.Models
 
         public string Text { get; set; }
 
-        public string Tag { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
 
         public string Description { get; set; }
 
