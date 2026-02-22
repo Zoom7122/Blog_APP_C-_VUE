@@ -1,0 +1,89 @@
+﻿@model BlagAPP_MVC.Models.ArticleSearchViewModel
+@{
+    ViewData["Title"] = "Просмотр статей";
+}
+
+<link rel="stylesheet" href="~/css/article-view.css" />
+
+<div class="article-view">
+    <form asp-action="ArticleView" asp-controller="Article" method="post" class="search-container">
+        @Html.AntiForgeryToken()
+        <input asp-for="Title" placeholder="Введите название" />
+        <input asp-for="Tag" placeholder="Введите тег" />
+        <button type="submit">Найти по свойствам</button>
+    </form>
+
+    @if (Model.SearchCompleted && Model.Articles.Count == 0)
+    {
+        <div class="no-articles">Статьи не найдены. Попробуйте изменить критерии поиска.</div>
+    }
+
+    @if (Model.Articles.Count > 0)
+    {
+        <div class="articles-count">Найдено статей: @Model.Articles.Count</div>
+
+        @for (var index = 0; index < Model.Articles.Count; index++)
+        {
+            var article = Model.Articles[index];
+            <div class="article-item">
+                <div class="article-header">
+                    <h2 class="article-title">@(string.IsNullOrWhiteSpace(article.Title) ? "Без названия" : article.Title)</h2>
+                    <div class="article-meta">
+                        @if (article.PublishedAt.HasValue)
+                        {
+                            <span class="date">@article.PublishedAt.Value.ToString("dd MMMM yyyy HH:mm")</span>
+                        }
+
+                        @if (article.Tags?.Count > 0)
+                        {
+                            <div class="tags">
+                                @foreach (var tag in article.Tags)
+                                {
+                                    <span class="tag">#@tag</span>
+                                }
+                            </div>
+                        }
+
+                        @if (article.ReadTime.HasValue)
+                        {
+                            <span class="read-time">Время чтения: @article.ReadTime мин.</span>
+                        }
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(article.Description))
+                {
+                    <div class="article-description">@article.Description</div>
+                }
+
+                <div class="article-content">
+                    <p>@(string.IsNullOrWhiteSpace(article.Text) ? "Содержание статьи отсутствует" : article.Text)</p>
+                </div>
+
+                @if (!string.IsNullOrWhiteSpace(article.Author_Email))
+                {
+                    <div class="article-footer">
+                        <span class="email">Email автора: @article.Author_Email</span>
+                    </div>
+                }
+
+                @if (article.comments?.Count > 0)
+                {
+                    <details class="divComments">
+                        <summary class="countComments">Количество комментариев: @article.comments.Count</summary>
+                        @for (var commentIndex = 0; commentIndex < article.comments.Count; commentIndex++)
+                        {
+                            var comment = article.comments[commentIndex];
+                            <div class="Comments">
+                                <p>Комментарий : @(commentIndex + 1)</p>
+                                <h5 class="nameAuthorConnent">@comment.UserName</h5>
+                                <p class="contentComments">@comment.Content</p>
+                                <p class="timeComments">Опубликован в @comment.CreatedAt</p>
+                            </div>
+                        }
+                    </details>
+                }
+            </div>
+        }
+    }
+</div>

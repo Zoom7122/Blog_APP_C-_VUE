@@ -1,4 +1,5 @@
-﻿using BlogAPP_BLL.Intarface;
+﻿using BlagAPP_MVC.Models;
+using BlogAPP_BLL.Intarface;
 using BlogAPP_BLL.Models;
 using BlogAPP_BLL.Services;
 using BlogAPP_Core.Models;
@@ -74,5 +75,32 @@ namespace BlagAPP_MVC.Controllers
                 return View(model);
             }
         }
+
+
+        [HttpGet]
+        [Route("ArticleView")]
+        public IActionResult ArticleView()
+        {
+            return View(new ArticleSearchViewModel());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("ArticleView")]
+        public async Task<IActionResult> ArticleView(ArticleSearchViewModel model)
+        {
+            var properties = new ArticlePropertiesFind
+            {
+                Title = string.IsNullOrWhiteSpace(model.Title) ? null : model.Title.Trim(),
+                Tags = string.IsNullOrWhiteSpace(model.Tag) ? null : new List<string> { model.Tag.Trim() }
+            };
+
+            var articles = await _articleService.FindArticleByProperties(properties);
+            model.Articles = articles ?? new List<ArticleReturnInAPI>();
+            model.SearchCompleted = true;
+
+            return View(model);
+        }
+
     }
 }
