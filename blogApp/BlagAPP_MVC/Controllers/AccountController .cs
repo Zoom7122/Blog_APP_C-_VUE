@@ -20,6 +20,7 @@ namespace BlagAPP_MVC.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("Login")]
         public IActionResult Login(string? returnUrl = null)
         {
             if (User.Identity?.IsAuthenticated == true)
@@ -34,6 +35,7 @@ namespace BlagAPP_MVC.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Login")]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)

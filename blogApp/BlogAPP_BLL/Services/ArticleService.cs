@@ -60,13 +60,23 @@ namespace BlogAPP_BLL.Services
 
             await _articleRepo.CreateArticleinDbAsync(article);
 
+
             //далее добавление тегов
-
-            List<string> tags = model.Tag; 
-
-            for(int i=0;i <tags.Count; i++)
+            if (model.Tag.Count > 0)
             {
-                await _tagService.CreatrTagToArticleAsync(tags[i], article.Id);
+                List<string> tags = new List<string>();
+
+                for (int i = 0; i < model.Tag.Count;i ++)
+                {
+                    if (!string.IsNullOrEmpty(model.Tag[i])) tags.Add(model.Tag[i]);
+                }
+                if (tags.Count > 0)
+                {
+                    for (int i = 0; i < tags.Count; i++)
+                    {
+                        await _tagService.CreatrTagToArticleAsync(tags[i], article.Id);
+                    }
+                }
             }
 
             return true;

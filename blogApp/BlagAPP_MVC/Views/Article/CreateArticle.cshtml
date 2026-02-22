@@ -1,0 +1,80 @@
+﻿@model BlogAPP_Core.Models.CreateArticleModel
+@{
+    ViewData["Title"] = "Create Article";
+}
+
+<link rel="stylesheet" href="~/css/article-create.css" />
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <p>@TempData["SuccessMessage"]</p>
+    <strong>Прошлая статья успешно добавлена</strong>
+}
+
+<div class="article-create-container">
+    <div class="header">
+        <button 
+            type="button"
+            class="btn btn-primary" 
+            style="background-color: #ff5252;"
+            onclick="window.location.href='/Login';">
+            Выйти
+        </button>
+    </div>
+
+    <div class="header">
+        <h1>Новая статья</h1>
+        <p>Заполните все поля для публикации статьи</p>
+    </div>
+
+    <form asp-action="CreateArticle" asp-controller="Article" method="post" class="ArticleAddForm">
+        @Html.AntiForgeryToken()
+        @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All"></div>
+            }
+
+        <div>
+            <label asp-for="Title"></label>
+            <input asp-for="Title" />
+            <span asp-validation-for="Title"></span>
+        </div>
+
+        <div>
+            <label>Теги</label>
+            <input type="text" name="Tag" placeholder="Тег 1" />
+            <input type="text" name="Tag" placeholder="Тег 2" />
+            <input type="text" name="Tag" placeholder="Тег 3" />
+        </div>
+
+        <div>
+            <label asp-for="CoverImage"></label>
+            <input asp-for="CoverImage" />
+            <span asp-validation-for="CoverImage"></span>
+        </div>
+
+        <div>
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description"></textarea>
+            <span asp-validation-for="Description"></span>
+        </div>
+
+        <div>
+            <label asp-for="Text"></label>
+            <textarea asp-for="Text"></textarea>
+            <span asp-validation-for="Text"></span>
+        </div>
+
+        <div>
+            <label asp-for="ReadTime"></label>
+            <input asp-for="ReadTime" type="number" />
+            <span asp-validation-for="ReadTime"></span>
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
