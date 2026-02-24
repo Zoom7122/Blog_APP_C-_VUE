@@ -191,5 +191,20 @@ namespace BlogAPP_BLL.Services
             };
 
         }
+
+        public async Task<List<ArticleReturnInAPI>> GetAllArticles()
+        {
+             var articles = _articleRepo.GetAllArticlesAsync();
+
+            var articlesToPush = new List<ArticleReturnInAPI>();
+
+            for (int i = 0;i < articles.Result.Count; i++)
+            {
+                articlesToPush.Add(_mapper.Map<ArticleReturnInAPI>(articles.Result[i]));
+                var tags = await _articleRepo.GetTagNamesByArticleIdAsync(articles.Result[i].Id);
+                articlesToPush[i].Tags = tags ?? new List<string>();
+            }   
+            return articlesToPush;
+        }
     }
 }

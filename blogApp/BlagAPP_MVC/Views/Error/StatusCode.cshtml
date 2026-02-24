@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Ошибка";
+    var statusCode = ViewData["StatusCode"]?.ToString();
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-5">Ошибка @statusCode</h1>
+    <p class="text-muted">Произошла ошибка при обработке запроса.</p>
+    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary mt-3">На главную</a>
+</div>

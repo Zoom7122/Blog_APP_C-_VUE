@@ -83,6 +83,17 @@
                 <a asp-action="UpdateArticle" asp-controller="Article" asp-route-articleId="@article.Id" class="btn btn-primary">
                     Редактировать статью
                 </a>
+
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="DeleteArticle" asp-controller="Article" asp-route-articleId="@article.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить эту статью?');">Удалить статью</button>
+                    </form>
+                }
+
+
             </div>
         }
     }

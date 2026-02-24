@@ -95,9 +95,18 @@ namespace BlagAPP_MVC.Controllers
                 Tags = string.IsNullOrWhiteSpace(model.Tag) ? null : new List<string> { model.Tag.Trim() }
             };
 
-            var articles = await _articleService.FindArticleByProperties(properties);
-            model.Articles = articles ?? new List<ArticleReturnInAPI>();
-            model.SearchCompleted = true;
+            if (model.Title == null && model.Tag == null)
+            {
+                var articles = await _articleService.GetAllArticles();
+                model.Articles = articles ?? new List<ArticleReturnInAPI>();
+                model.SearchCompleted = true;
+            }
+            else
+            {
+                var articles = await _articleService.FindArticleByProperties(properties);
+                model.Articles = articles ?? new List<ArticleReturnInAPI>();
+                model.SearchCompleted = true;
+            }
 
             return View(model);
         }
@@ -172,6 +181,34 @@ namespace BlagAPP_MVC.Controllers
                 ModelState.AddModelError("", ex.Message);
                 return View("UpdateArticle", model);
             }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        [Route("DeleteArticle/{articleId}")]
+        public async Task<IActionResult> DeleteArticle(string articleId)
+        {
+            try
+            {
+                var result = await _articleService.DeleteArticleAsync(articleId);
+
+                if (!result)
+                {
+                    TempData["Error"] = "Статья не найдена";
+                }
+                else
+                {
+                    TempData["SuccessMessage"] = "Статья успешно удалена";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Ошибка при удалении статьи: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(MyArticle));
         }
     }
 }

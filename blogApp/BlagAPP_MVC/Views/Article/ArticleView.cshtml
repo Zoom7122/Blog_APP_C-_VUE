@@ -63,6 +63,14 @@
                     </div>
                 </div>
 
+                @if (User.IsInRole("Admin"))
+                {
+                    <form asp-action="DeleteArticle" asp-controller="Article" asp-route-articleId="@article.Id" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить эту статью?');">Удалить статью</button>
+                    </form>
+                }
+
                 @if (!string.IsNullOrWhiteSpace(article.Description))
                 {
                     <div class="article-description">@article.Description</div>
@@ -91,6 +99,18 @@
                                 <h5 class="nameAuthorConnent">@comment.UserName</h5>
                                 <p class="contentComments">@comment.Content</p>
                                 <p class="timeComments">Опубликован в @comment.CreatedAt</p>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <form asp-action="Delete" asp-controller="Comments" asp-route-commentId="@comment.Id" method="post" class="mt-2">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="searchTitle" value="@Model.Title" />
+                                        <input type="hidden" name="searchTag" value="@Model.Tag" />
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Удалить этот комментарий?');">Удалить комментарий</button>
+                                    </form>
+                                }
+
+
                             </div>
                         }
                     </details>

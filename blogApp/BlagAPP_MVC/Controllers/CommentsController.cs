@@ -59,5 +59,32 @@ namespace BlagAPP_MVC.Controllers
 
             return RedirectToAction("ArticleView", "Article", new { title = model.SearchTitle, tag = model.SearchTag });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        [Route("Comments/Delete/{commentId}")]
+        public async Task<IActionResult> Delete(string commentId, string? searchTitle, string? searchTag)
+        {
+            try
+            {
+                var result = await _commentsService.DeleteCommentAsync(commentId);
+
+                if (!result)
+                {
+                    TempData["CommentError"] = "Комментарий не найден.";
+                }
+                else
+                {
+                    TempData["CommentSuccess"] = "Комментарий удалён.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["CommentError"] = $"Ошибка при удалении комментария: {ex.Message}";
+            }
+
+            return RedirectToAction("ArticleView", "Article", new { title = searchTitle, tag = searchTag });
+        }
     }
 }

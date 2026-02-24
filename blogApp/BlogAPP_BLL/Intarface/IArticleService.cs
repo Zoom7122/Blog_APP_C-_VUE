@@ -23,5 +23,7 @@ namespace BlogAPP_BLL.Intarface
 
         Task<bool> UpdateArticleAsync(UpdateArticleModel model, string userEmail);
 
+        Task<List<ArticleReturnInAPI>> GetAllArticles();
+
     }
 }
