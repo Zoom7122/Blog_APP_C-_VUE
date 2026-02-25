@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using NLog.Web;
+using BlagAPP_MVC.Filters;
+using BlagAPP_MVC.Middleware;
 
 var logger = LogManager.Setup()
 .LoadConfigurationFromFile("nlog.config")
@@ -17,6 +19,14 @@ try
 
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
+
+
+    builder.Services.AddScoped<UserActionLoggingFilter>();
+
+    builder.Services.AddControllersWithViews(options =>
+    {
+        options.Filters.AddService<UserActionLoggingFilter>();
+    });
 
 
     builder.Services.AddControllersWithViews();
@@ -59,6 +69,7 @@ try
     }
 
     app.UseExceptionHandler("/Error");
+    app.UseMiddleware<UnhandledExceptionLoggingMiddleware>();
 
     if (!app.Environment.IsDevelopment())
     {

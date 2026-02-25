@@ -16,7 +16,6 @@ namespace BlagAPP_MVC.Controllers
     {
 
         private readonly IArticleService _articleService;
-        private readonly ICommentsService _commentsService;
 
 
         public ArticleController(
@@ -24,7 +23,6 @@ namespace BlagAPP_MVC.Controllers
         ICommentsService commentsService)
         {
             _articleService = articleService;
-            _commentsService = commentsService;
         }
 
         [HttpGet]
