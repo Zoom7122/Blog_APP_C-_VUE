@@ -1,18 +1,13 @@
-﻿
-using BlogAPP_BLL.Intarface;
-using BlogAPP_BLL.Models;
-using BlogAPP_BLL.Services;
+﻿using BlogAPP_BLL.Intarface;
 using BlogAPP_Core.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace BlogAPP_API.Controllers
 {
-
     [ApiController]
     [AllowAnonymous]
     [Route("api/[controller]")]
@@ -20,7 +15,7 @@ namespace BlogAPP_API.Controllers
     {
         private readonly ILoginService _logService;
 
-        public EntranceController(ILoginService logService, IArticleService articleService) 
+        public EntranceController(ILoginService logService)
         {
             _logService = logService;
         }
@@ -30,32 +25,33 @@ namespace BlogAPP_API.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<BlogAPP_Core.Models.AuthResponseDto>> Login([FromBody] LoginDate data)
+        public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDate data)
         {
             try
             {
                 var user = await _logService.Login(data);
                 if (user == null)
-                    return Ok(new BlogAPP_Core.Models.AuthResponseDto
+                {
+                    return Unauthorized(new AuthResponseDto
                     {
                         Success = false,
                         ErrorMessage = "Неверный Email или пароль"
                     });
+                }
 
                 var userRole = string.IsNullOrWhiteSpace(user.Role) ? "User" : user.Role;
 
                 var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim("Avatar", user.Avatar_url ?? ""),
-                new Claim("Role", userRole),
-                new Claim(ClaimTypes.Role, userRole),
-                new Claim("CountPost", user.CountPost.ToString() ?? "1"),
-            };
+                {
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim("Avatar", user.Avatar_url ?? ""),
+                    new Claim("Role", userRole),
+                    new Claim(ClaimTypes.Role, userRole),
+                    new Claim("CountPost", user.CountPost.ToString())
+                };
 
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var authProperties = new AuthenticationProperties
                 {
@@ -69,11 +65,11 @@ namespace BlogAPP_API.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                return Ok(new BlogAPP_Core.Models.AuthResponseDto { Success = true, User = user });
+                return Ok(new AuthResponseDto { Success = true, User = user });
             }
             catch (Exception ex)
             {
-                return Ok(new BlogAPP_Core.Models.AuthResponseDto { Success = false, ErrorMessage = $"Ошибка: {ex.Message}" });
+                return Unauthorized(new AuthResponseDto { Success = false, ErrorMessage = ex.Message });
             }
         }
 
@@ -89,7 +85,7 @@ namespace BlogAPP_API.Controllers
         [Route("CheckAuth")]
         public IActionResult CheckAuth()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity?.IsAuthenticated == true)
             {
                 var user = new
                 {
@@ -101,9 +97,9 @@ namespace BlogAPP_API.Controllers
                 };
                 return Ok(new { success = true, user });
             }
-            return Ok(new { success = false });
-        }
 
+            return Unauthorized(new { success = false, message = "Пользователь не авторизован" });
+        }
 
         [HttpPost]
         [Route("Register")]
@@ -112,27 +108,21 @@ namespace BlogAPP_API.Controllers
             try
             {
                 var result = await _logService.Register(data);
+                if (!result)
+                    return BadRequest(new { success = false, message = "Не удалось зарегистрировать пользователя" });
 
-                if (result)
-                    return Ok(new { success = true });
-                return Ok(new { success = false });
+                return StatusCode(StatusCodes.Status201Created, new { success = true });
             }
             catch (Exception ex)
             {
-                return Ok(new
-                {
-                    success = false,
-                    messegeEror = ex.Message
-                });
+                return BadRequest(new { success = false, message = ex.Message });
             }
         }
-
-
 
         [Authorize]
         [HttpPut]
         [Route("UpdateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody] BlogAPP_Core.Models.UpdateUserDto data)
+        public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto data)
         {
             try
             {
@@ -141,7 +131,6 @@ namespace BlogAPP_API.Controllers
                     return Unauthorized(new { success = false, message = "Пользователь не авторизован" });
 
                 var updatedUser = await _logService.UpdateUserAsync(currentEmail, data);
-
                 var userRole = string.IsNullOrWhiteSpace(updatedUser.Role) ? "User" : updatedUser.Role;
 
                 var claims = new List<Claim>
@@ -154,8 +143,7 @@ namespace BlogAPP_API.Controllers
                     new Claim("CountPost", updatedUser.CountPost.ToString())
                 };
 
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 var authProperties = new AuthenticationProperties
                 {
@@ -173,7 +161,7 @@ namespace BlogAPP_API.Controllers
             }
             catch (Exception ex)
             {
-                return Ok(new AuthResponseDto { Success = false, ErrorMessage = ex.Message });
+                return BadRequest(new AuthResponseDto { Success = false, ErrorMessage = ex.Message });
             }
         }
     }

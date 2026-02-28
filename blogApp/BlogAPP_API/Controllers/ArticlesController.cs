@@ -46,14 +46,14 @@ namespace BlogAPP_API.Controllers
 
                 var result = await _articleService.CreateArticle(model, userCookie);
 
-                if (result)
-                    return Ok(new { success = true });  
-                else return Ok(new { success = false });
+                if (!result)
+                    return BadRequest(new { success = false, message = "Не удалось создать статью" });
+
+                return Created(string.Empty, new { success = true });
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false,
-                    messegeError = ex.Message });
+                return BadRequest(new { success = false, message = ex.Message });
             }
         }
 
@@ -82,17 +82,17 @@ namespace BlogAPP_API.Controllers
         {
             try
             {
-                List<ArticleReturnInAPI> list = await _articleService.FindArticleByProperties(propertiesFind);
+                var list = await _articleService.FindArticleByProperties(propertiesFind);
 
                 if (list == null || list.Count <= 0)
-                    return Ok(new { success = false, messegeEror = "Статьи не найдены" });
+                    return NotFound(new { success = false, message = "Статьи не найдены" });
 
                 return Ok(new { success = true, list });
 
             }
             catch (Exception ex)
             {
-                return Ok(new { success = false, messegeEror = $"Ошибка: {ex.Message}" });
+                return BadRequest(new { success = false, message = ex.Message });
             }
 
         }
