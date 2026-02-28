@@ -113,6 +113,51 @@ namespace BlogAPP_API.Controllers
                 return Ok(countPost);
             }
         }
+
+        [HttpGet]
+        [Route("GetAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var articles = await _articleService.GetAllArticles();
+            return Ok(new { success = true, articles });
+        }
+
+        [HttpGet("{articleId}")]
+        public async Task<IActionResult> GetById(string articleId)
+        {
+            var article = await _articleService.FindArticleByID(articleId);
+            if (article == null)
+                return NotFound(new { success = false, message = "Статья не найдена" });
+
+            return Ok(new { success = true, article });
+        }
+
+        [HttpGet("My")]
+        public async Task<IActionResult> GetMyArticles()
+        {
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrWhiteSpace(email))
+                return Unauthorized(new { success = false, message = "Пользователь не авторизован" });
+
+            var articles = await _articleService.FindArticleWroteByuser(email);
+            return Ok(new { success = true, articles });
+        }
+
+        [HttpPut("{articleId}")]
+        public async Task<IActionResult> UpdateArticle(string articleId, [FromBody] UpdateArticleModel model)
+        {
+            if (model == null)
+                return BadRequest(new { success = false, message = "Некорректные данные" });
+
+            model.Id = articleId;
+
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrWhiteSpace(email))
+                return Unauthorized(new { success = false, message = "Пользователь не авторизован" });
+
+            var result = await _articleService.UpdateArticleAsync(model, email);
+            return Ok(new { success = result });
+        }
     }
 }
 
